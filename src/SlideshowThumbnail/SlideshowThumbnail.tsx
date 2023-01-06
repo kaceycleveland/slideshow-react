@@ -23,7 +23,6 @@ export const SlideshowThumbnail = forwardRef<
     },
     ref
   ) => {
-    const isRequested = imgProps?.loading === "eager";
     const [showFullQuality, setShowFullQuality] = useState(false);
     const onLoad = useCallback(() => setShowFullQuality(true), []);
 
@@ -32,7 +31,6 @@ export const SlideshowThumbnail = forwardRef<
         className={clsx(classes?.container, {
           hide: !active,
           active,
-          requested: isRequested,
         })}
         onClick={onThumbnailClick}
         id={containerId}

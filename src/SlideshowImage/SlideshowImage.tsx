@@ -5,7 +5,6 @@ import { DATA_SRC_ATTR } from "../useSlideshow/Constants";
 
 export const SlideshowImage = forwardRef<HTMLImageElement, ImageMetadata>(
   ({ blurImgProps, classes, imgProps, active, containerId, dataSrc }, ref) => {
-    const isRequested = imgProps?.loading === "eager";
     const [showFullQuality, setShowFullQuality] = useState(false);
     const onLoad = useCallback(() => setShowFullQuality(true), []);
     return (
@@ -13,11 +12,10 @@ export const SlideshowImage = forwardRef<HTMLImageElement, ImageMetadata>(
         className={clsx(classes?.container, {
           hide: !active,
           active,
-          requested: isRequested,
         })}
         id={containerId}
       >
-        {blurImgProps && (
+        {blurImgProps?.src && (
           <img
             className={clsx(blurImgProps?.className, classes?.blurImg, {
               hide: showFullQuality,

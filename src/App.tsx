@@ -1,15 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import reactLogo from "./assets/react.svg";
 import "./App.css";
-import {
-  ImageMetadata,
-  SlideOptions,
-  SlideshowOptions,
-  useSlideshow,
-} from "./useSlideshow";
-import clsx from "clsx";
+import { ImageMetadata, SlideOptions, useSlideshow } from "./useSlideshow";
 import { SlideshowImage } from "./SlideshowImage";
-200;
 import { SlideshowThumbnail } from "./SlideshowThumbnail";
 import { useSlideshowScroll } from "./useSlideshowScroll";
 
@@ -80,7 +71,6 @@ const getBlurSrc = (imageMetadata: ImageMetadata) => {
 };
 
 function App() {
-  const [count, setCount] = useState(0);
   const {
     rootThumbnailContainerRef,
     rootSlidesContainerRef,
@@ -94,9 +84,9 @@ function App() {
     preloadDepth: 1,
   });
 
-  // const { containerRef } = useSlideshowScroll(index, getId, {
-  //   passedContainerRef: rootSlidesContainerRef,
-  // });
+  const { containerRef } = useSlideshowScroll(index, getId, {
+    passedContainerRef: rootSlidesContainerRef,
+  });
 
   const { containerRef: thumbnailContainerRef } = useSlideshowScroll(
     index,
@@ -112,7 +102,7 @@ function App() {
     <div className="App">
       <div onClick={() => setSlideIdx(index - 1)}>Previous</div>
       <div onClick={() => setSlideIdx(index + 1)}>Next</div>
-      <div ref={rootSlidesContainerRef} className="image-gallery-container">
+      <div ref={containerRef} className="image-gallery-container">
         {/* <div className={clsx("loading-indicator", { loading: isLoading })}>
           Loading...
         </div> */}

@@ -82,6 +82,10 @@
   height: 200px;
 }
 
+.thumbnail-image-container.active {
+  border: 5px solid red;
+}
+
 .thumbnail-image-container .thumbnail-blur-image {
   position: absolute;
   opacity: 1;
