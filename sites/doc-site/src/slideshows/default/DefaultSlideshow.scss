@@ -1,38 +1,73 @@
 /* fade in and out */
 
-/*
-
-.image-gallery-container {
+.default-gallery-container {
   position: relative;
-  width: 800px;
-  height: 800px;
+  width: 600px;
+  height: 600px;
+
+  .image-container {
+    position: absolute;
+
+    .blur-image {
+      position: absolute;
+      opacity: 1;
+      transition: opacity 0.2s linear;
+
+      &.hide {
+        opacity: 0;
+      }
+    }
+
+    &.hide {
+      display: none;
+    }
+  }
 }
 
-.image-container {
-  position: absolute;
-}
+.default-thumbnail-container {
+  position: relative;
+  white-space: nowrap;
+  width: 600px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
 
-.image-container .blur-image {
-  position: absolute;
-  opacity: 1;
-  transition: opacity 0.2s linear;
-}
+  .thumbnail-image-container {
+    scroll-snap-align: start;
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
 
-.image-container .blur-image.hide {
- opacity: 0;
-}
+    &.active {
+      border: 5px solid red;
+    }
 
-.image-container.hide {
-  display: none;
-} */
+    .thumbnail-main-image {
+      width: 200px;
+      height: 200px;
+    }
+
+    .thumbnail-blur-image {
+      position: absolute;
+      opacity: 1;
+      transition: opacity 0.2s linear;
+
+      &.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+  }
+}
 
 /* slide */
 
-.image-gallery-container {
+/* .image-gallery-container {
   position: relative;
   display: flex;
-  width: 800px;
-  height: 800px;
+  width: 600px;
+  height: 600px;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
@@ -42,11 +77,6 @@
   scroll-snap-align: center;
   position: relative;
   display: inline-block;
-}
-
-.image-container .main-image {
-  width: 800px;
-  height: 800px;
 }
 
 .image-container .blur-image {
@@ -62,7 +92,7 @@
 .image-gallery-thumbnail-container {
     position: relative;
     display: flex;
-    width: 800px;
+    width: 600px;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;                  
@@ -95,4 +125,4 @@
 .thumbnail-image-container .thumbnail-blur-image.hide {
  opacity: 0;
  pointer-events: none;
-}
+} */

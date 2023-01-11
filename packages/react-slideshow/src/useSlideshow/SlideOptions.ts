@@ -3,7 +3,8 @@ import { SlideshowImageProps } from "../SlideshowImage";
 import { SlideshowThumbnailProps } from "../SlideshowThumbnail";
 
 export interface ImageMetadata {
-  dataSrc: string;
+  src: string;
+  dataIdx?: number;
   classes?: {
     container?: string;
     blurImg?: string;

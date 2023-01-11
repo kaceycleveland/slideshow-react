@@ -1,41 +1,40 @@
-import {
-  ImageMetadata,
-  SlideOptions,
-  ThumbnailMetadata,
-} from "../useSlideshow";
+import { ImageMetadata } from "../useSlideshow";
 import clsx from "clsx";
 import { ComponentProps, forwardRef, useCallback, useState } from "react";
-import { DATA_SRC_ATTR } from "../useSlideshow/Constants";
+import { DATA_IDX_ATTR, DATA_SRC_ATTR } from "../useSlideshow/Constants";
 
-export const SlideshowThumbnail = forwardRef<
+export interface SlideshowImageAddedProps extends ImageMetadata {
+  className?: string;
+}
+
+export const SlideshowImage = forwardRef<
   HTMLImageElement,
-  ThumbnailMetadata
+  SlideshowImageAddedProps
 >(
   (
     {
+      className,
+      blurImgProps,
+      classes,
+      imgProps,
       active,
       containerId,
-      imgProps,
-      classes,
-      blurImgProps,
-      onThumbnailClick,
-      dataSrc,
+      src,
+      dataIdx,
     },
     ref
   ) => {
     const [showFullQuality, setShowFullQuality] = useState(false);
     const onLoad = useCallback(() => setShowFullQuality(true), []);
-
     return (
       <div
-        className={clsx(classes?.container, {
+        className={clsx(className, classes?.container, {
           hide: !active,
           active,
         })}
-        onClick={onThumbnailClick}
         id={containerId}
       >
-        {blurImgProps && (
+        {blurImgProps?.src && (
           <img
             className={clsx(blurImgProps?.className, classes?.blurImg, {
               hide: showFullQuality,
@@ -45,11 +44,10 @@ export const SlideshowThumbnail = forwardRef<
           />
         )}
         <img
-          ref={ref}
           className={clsx(classes?.mainImg)}
+          ref={ref}
+          {...{ [DATA_SRC_ATTR]: src, [DATA_IDX_ATTR]: dataIdx }}
           {...imgProps}
-          {...{ [DATA_SRC_ATTR]: dataSrc }}
-          // src={dataSrc}
           // loading={active ? "eager" : loading ?? "lazy"}
           onLoad={onLoad}
         />
@@ -58,4 +56,4 @@ export const SlideshowThumbnail = forwardRef<
   }
 );
 
-export type SlideshowThumbnailProps = ComponentProps<typeof SlideshowThumbnail>;
+export type SlideshowImageProps = ComponentProps<typeof SlideshowImage>;

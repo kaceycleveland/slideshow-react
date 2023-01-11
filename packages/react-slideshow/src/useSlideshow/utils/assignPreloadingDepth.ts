@@ -11,12 +11,10 @@ export const assignPreloadingDepth = (
 ) => {
   let nextTrack = activeIdx;
   let prevTrack = activeIdx;
-  console.log("active", activeIdx);
   assignSrc(slideOptions[activeIdx].main);
   for (let i = 0; i < preloadDepth; i++) {
     const nextImageIdx = nextImageIdxFn(slideOptions, nextTrack);
     const prevImageIdx = prevImageIdxFn(slideOptions, prevTrack);
-    console.log(nextImageIdx, prevImageIdx);
     if (nextImageIdx) {
       nextTrack = nextImageIdx;
       assignSrc(slideOptions[nextImageIdx].main);
