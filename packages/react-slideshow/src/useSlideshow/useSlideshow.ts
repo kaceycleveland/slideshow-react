@@ -14,15 +14,6 @@ import { DEFAULT_SLIDESHOW_OPTIONS } from "./utils/defaultSlideshowOptions";
 import { loadImage } from "./utils/loadImage";
 import { useScrollSetup } from "./useScrollSetup";
 
-const onIntersection: IntersectionObserverCallback = (entries, observer) => {
-  entries.forEach((entry) => {
-    if (entry.intersectionRatio >= 0.5) {
-      observer.unobserve(entry.target);
-      loadImage(entry.target as HTMLImageElement);
-    }
-  });
-};
-
 export interface SlideshowState {
   transitioning: boolean;
   manualScrolling: boolean;
@@ -74,25 +65,11 @@ export const useSlideshow = (
 
   const debouncedActiveSlideIdx = useDebounce(activeSlideIdx, 100);
 
-  // useEffect(() => {
-  //   slideshowState.transitioning = false;
-  // }, [debouncedActiveSlideIdx]);
-
-  const slides: SlideOptions[] = useMemo(() => {
-    assignPreloadingDepth(
-      slideOptions,
-      options.preloadDepth,
-      debouncedActiveSlideIdx,
-      options.nextImageIdxFn,
-      options.previousImageIdxFn
-    );
-
+  const parsedSlides: SlideOptions[] = useMemo(() => {
     const assignedSlides: SlideOptions[] = slideOptions.map(
       (slideOption, slideIndex) => {
         const base: SlideOptions = { ...slideOption };
 
-        // Assign active state to corresponding slide
-        base.main.active = slideIndex === debouncedActiveSlideIdx;
         base.main.dataIdx = slideIndex;
 
         // Generate and assign blur images to each slide if not defined
@@ -106,7 +83,6 @@ export const useSlideshow = (
         };
 
         if (base.thumbnail) {
-          base.thumbnail.active = slideIndex === debouncedActiveSlideIdx;
           assignBlurSrc(base.thumbnail, options?.getThumbnailBlurSrc);
           assignDefaultClasses(
             base.thumbnail,
@@ -123,21 +99,55 @@ export const useSlideshow = (
     );
 
     return assignedSlides;
-  }, [debouncedActiveSlideIdx, slideOptions, thumbnailRefs, options]);
+  }, [slideOptions, thumbnailRefs, options]);
+
+  const activeSlides: SlideOptions[] = useMemo(() => {
+    assignPreloadingDepth(
+      parsedSlides,
+      options.preloadDepth,
+      debouncedActiveSlideIdx,
+      options.nextImageIdxFn,
+      options.previousImageIdxFn
+    );
+
+    const assignedSlides: SlideOptions[] = parsedSlides.map(
+      (slideOption, slideIndex) => {
+        const base: SlideOptions = { ...slideOption };
+
+        // Assign active state to corresponding slide
+        base.main.active = slideIndex === debouncedActiveSlideIdx;
+        base.main.dataIdx = slideIndex;
+
+        if (base.thumbnail) {
+          base.thumbnail.active = slideIndex === debouncedActiveSlideIdx;
+        }
+
+        return base;
+      }
+    );
+    return assignedSlides;
+  }, [
+    parsedSlides,
+    options.preloadDepth,
+    debouncedActiveSlideIdx,
+    options.nextImageIdxFn,
+    options.previousImageIdxFn,
+  ]);
 
   useScrollSetup(
-    slides.length,
+    activeSlides.length,
     setSlideIdx,
     slideshowState,
     slidesRef,
     rootSlidesContainerRef,
     thumbnailRefs,
-    rootThumbnailContainerRef
+    rootThumbnailContainerRef,
+    passedOptions?.isScrolling
   );
 
   const activeSlide = useMemo(
-    () => slideOptions[debouncedActiveSlideIdx],
-    [debouncedActiveSlideIdx]
+    () => activeSlides[debouncedActiveSlideIdx],
+    [activeSlides, debouncedActiveSlideIdx]
   );
 
   const { containerRef } = useContainerScroll(
@@ -159,7 +169,7 @@ export const useSlideshow = (
   );
 
   return {
-    slides,
+    slides: activeSlides,
     slideshowState,
     rootSlidesContainerRef: containerRef,
     rootThumbnailContainerRef: thumbnailContainerRef,

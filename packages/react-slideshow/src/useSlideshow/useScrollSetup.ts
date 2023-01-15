@@ -24,8 +24,6 @@ const getSelectionObserver: (
         entry.intersectionRatio >= 0.5 &&
         slideshowState.manualScrolling
       ) {
-        console.log("INTERSECT", index, slideshowState);
-        console.log("TRANSITIONING", slideshowState.transitioning);
         setSlideIdx(parseInt(index));
       }
     });
@@ -38,7 +36,8 @@ export const useScrollSetup = (
   slidesRef: MutableRefObject<HTMLImageElement[]>,
   slidesContainerRef: RefObject<HTMLDivElement>,
   thumbnailsRef: MutableRefObject<HTMLImageElement[]>,
-  thumbnailsContainerRef: RefObject<HTMLDivElement>
+  thumbnailsContainerRef: RefObject<HTMLDivElement>,
+  enabled?: boolean
 ) => {
   useEffect(() => {
     thumbnailsRef.current = thumbnailsRef.current.slice(0, length);
@@ -51,28 +50,36 @@ export const useScrollSetup = (
   }, [length, thumbnailsRef.current, thumbnailsContainerRef.current]);
 
   useEffect(() => {
-    slidesRef.current = slidesRef.current.slice(0, length);
-    const observer = new IntersectionObserver(onIntersection, {
-      root: slidesContainerRef.current,
-      rootMargin: "0px",
-      threshold: 0.5,
-    });
-    const selectionObserver = new IntersectionObserver(
-      getSelectionObserver(setSlideIdx, slideshowState),
-      {
+    if (enabled) {
+      slidesRef.current = slidesRef.current.slice(0, length);
+      const observer = new IntersectionObserver(onIntersection, {
         root: slidesContainerRef.current,
         rootMargin: "0px",
         threshold: 0.5,
-      }
-    );
-    slidesRef.current.forEach((slide) => {
-      selectionObserver.observe(slide);
-      observer.observe(slide);
-    });
-  }, [length, setSlideIdx, slidesRef.current, slidesContainerRef.current]);
+      });
+      const selectionObserver = new IntersectionObserver(
+        getSelectionObserver(setSlideIdx, slideshowState),
+        {
+          root: slidesContainerRef.current,
+          rootMargin: "0px",
+          threshold: 0.5,
+        }
+      );
+      slidesRef.current.forEach((slide) => {
+        selectionObserver.observe(slide);
+        observer.observe(slide);
+      });
+    }
+  }, [
+    enabled,
+    length,
+    setSlideIdx,
+    slidesRef.current,
+    slidesContainerRef.current,
+  ]);
 
   useEffect(() => {
-    if (slidesContainerRef.current) {
+    if (enabled && slidesContainerRef.current) {
       let isScrolling: any;
       slidesContainerRef.current.onscroll = () => {
         // Clear our timeout throughout the scroll

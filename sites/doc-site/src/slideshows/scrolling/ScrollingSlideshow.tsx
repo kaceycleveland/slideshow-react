@@ -82,6 +82,7 @@ export const ScrollingSlideshow = () => {
   } = useSlideshow(slideOptions, {
     getBlurSrc,
     getThumbnailBlurSrc: getBlurSrc,
+    isScrolling: true,
   });
 
   return (
