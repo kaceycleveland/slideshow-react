@@ -86,7 +86,7 @@ export const ScrollingSlideshow = () => {
   });
 
   return (
-    <div className="App">
+    <div className="scrolling-container">
       <div ref={rootSlidesContainerRef} className="scrolling-gallery-container">
         {/* <div className={clsx("loading-indicator", { loading: isLoading })}>
           Loading...

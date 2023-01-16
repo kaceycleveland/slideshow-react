@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useContainerScroll } from "./useContainerScroll";
 import { useDebounce } from "../utils/useDebounce";
-import { DATA_IDX_ATTR, DATA_SRC_ATTR } from "./Constants";
 import { SlideOptions } from "./SlideOptions";
 import { SlideshowOptions } from "./SlideshowOptions";
 import {
@@ -11,7 +10,6 @@ import {
   assignThumbnailClick,
 } from "./utils";
 import { DEFAULT_SLIDESHOW_OPTIONS } from "./utils/defaultSlideshowOptions";
-import { loadImage } from "./utils/loadImage";
 import { useScrollSetup } from "./useScrollSetup";
 
 export interface SlideshowState {
@@ -156,6 +154,7 @@ export const useSlideshow = (
     slidesRef,
     {
       passedContainerRef: rootSlidesContainerRef,
+      dependentContainerRef: rootSlidesContainerRef,
     }
   );
 
@@ -165,6 +164,7 @@ export const useSlideshow = (
     thumbnailRefs,
     {
       passedContainerRef: rootThumbnailContainerRef,
+      isVertical: options.isVertical,
     }
   );
 

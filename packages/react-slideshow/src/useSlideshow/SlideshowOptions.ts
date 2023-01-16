@@ -18,4 +18,5 @@ export interface SlideshowOptions {
   defaultClasses?: SlideshowClasses;
   defaultThumbnailClasses?: SlideshowClasses;
   isScrolling?: boolean;
+  isVertical?: boolean;
 }

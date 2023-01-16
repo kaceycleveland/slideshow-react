@@ -1,4 +1,5 @@
 import { MutableRefObject, RefObject, useEffect } from "react";
+import { getScrollParent } from "../utils/getScrollParent";
 import { DATA_IDX_ATTR } from "./Constants";
 import { SlideshowState } from "./useSlideshow";
 import { loadImage } from "./utils/loadImage";
@@ -19,6 +20,7 @@ const getSelectionObserver: (
   (setSlideIdx, slideshowState) => (entries, observer) => {
     entries.forEach((entry) => {
       const index = entry.target.getAttribute(DATA_IDX_ATTR);
+      console.log("INTERSECTION OBSERVER", index, slideshowState);
       if (
         index &&
         entry.intersectionRatio >= 0.5 &&
@@ -94,17 +96,23 @@ export const useScrollSetup = (
         }, 30);
       };
 
-      slidesContainerRef.current.onmousedown = (e) => {
-        console.log("mousedown");
-        slideshowState.scrollingElement = e.target;
+      const setScrollingTarget = (e: MouseEvent | TouchEvent) => {
+        slideshowState.scrollingElement = slidesContainerRef.current;
+        console.log("mousedown", slideshowState.scrollingElement);
         slideshowState.manualScrolling = true;
       };
 
-      slidesContainerRef.current.onmouseup = () => {
+      const unsetScrollingTarget = (e: MouseEvent | TouchEvent) => {
         console.log("mouseup");
         slideshowState.scrollingElement = null;
         slideshowState.manualScrolling = false;
       };
+
+      slidesContainerRef.current.onmousedown = setScrollingTarget;
+      // slidesContainerRef.current.ontouchstart = setScrollingTarget;
+
+      slidesContainerRef.current.onmouseup = unsetScrollingTarget;
+      // slidesContainerRef.current.ontouchend = unsetScrollingTarget;
     }
   }, [slidesContainerRef]);
 };

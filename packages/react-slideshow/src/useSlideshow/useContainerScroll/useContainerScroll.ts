@@ -2,24 +2,62 @@ import { MutableRefObject, RefObject, useEffect, useMemo, useRef } from "react";
 import { SlideshowState } from "../useSlideshow";
 
 interface UseContainerScrollOptions {
-  alignment?: "left" | "right" | "center";
+  alignment?: "left" | "right" | "center" | "top" | "bottom";
   passedContainerRef?: RefObject<HTMLDivElement>;
+  dependentContainerRef?: RefObject<HTMLDivElement>;
+  isVertical?: boolean;
 }
 
 const getSpacing = (
   remainingSpace: number,
   alignment?: UseContainerScrollOptions["alignment"]
 ) => {
-  if (alignment === "left") return 0;
-  if (alignment === "right") return remainingSpace;
+  if (alignment === "left" || alignment === "top") return 0;
+  if (alignment === "right" || alignment === "bottom") return remainingSpace;
   return remainingSpace / 2;
+};
+
+const performHorizontalScroll = (
+  containerElement: HTMLDivElement,
+  slideElement: HTMLElement,
+  alignment: UseContainerScrollOptions["alignment"]
+) => {
+  const parentWidth = containerElement.clientWidth;
+  const elementWidth = slideElement.offsetWidth;
+  const elementOffsetLeft = slideElement.offsetLeft;
+  const remainingSpace = parentWidth - elementWidth;
+  const spaceLeft = getSpacing(remainingSpace, alignment);
+
+  containerElement.scrollTo({
+    behavior: "smooth",
+    left: elementOffsetLeft - spaceLeft,
+  });
+};
+
+const performVerticalScroll = (
+  containerElement: HTMLDivElement,
+  slideElement: HTMLElement,
+  alignment: UseContainerScrollOptions["alignment"]
+) => {
+  const parentHeight = containerElement.clientHeight;
+  const elementHeight = slideElement.offsetHeight;
+  const elementOffsetTop = slideElement.offsetTop;
+  const remainingSpace = parentHeight - elementHeight;
+  const spaceLeft = getSpacing(remainingSpace, alignment);
+
+  console.log("performing vertical scroll");
+
+  containerElement.scrollTo({
+    behavior: "smooth",
+    top: elementOffsetTop - spaceLeft,
+  });
 };
 
 export const useContainerScroll = (
   activeIndex: number,
   slideshowState: SlideshowState,
   refs: MutableRefObject<HTMLImageElement[]>,
-  options?: UseContainerScrollOptions
+  options: UseContainerScrollOptions
 ) => {
   const newContainerRef = useRef<HTMLDivElement>(null);
   const containerRef = useMemo(
@@ -33,30 +71,34 @@ export const useContainerScroll = (
       (!slideshowState.manualScrolling ||
         containerRef.current !== slideshowState.scrollingElement)
     ) {
-      console.log("performing scroll", slideshowState.scrollingElement);
-      const targetElement = refs.current[activeIndex].parentElement;
-      const parentWidth = containerRef.current.clientWidth;
-      const elementWidth = targetElement?.offsetWidth ?? 0;
-      const elementOffsetLeft = targetElement?.offsetLeft ?? 0;
-      const remainingSpace = parentWidth - elementWidth;
-      const spaceLeftAndRight = getSpacing(remainingSpace, options?.alignment);
       console.log(
-        "TARGET ELEMENT",
-        parentWidth,
-        elementWidth,
-        elementOffsetLeft,
-        spaceLeftAndRight,
-        targetElement,
-        containerRef.current,
-        elementOffsetLeft - spaceLeftAndRight
+        "performing scroll",
+        slideshowState.scrollingElement,
+        options.dependentContainerRef?.current
       );
-      console.dir(targetElement);
-      containerRef.current.scrollTo({
-        behavior: "smooth",
-        left: elementOffsetLeft - spaceLeftAndRight,
-      });
+      const targetElement = refs.current[activeIndex].parentElement;
+      if (targetElement) {
+        options?.isVertical
+          ? performVerticalScroll(
+              containerRef.current,
+              targetElement,
+              options.alignment
+            )
+          : performHorizontalScroll(
+              containerRef.current,
+              targetElement,
+              options.alignment
+            );
+      }
     }
-  }, [activeIndex, options?.alignment, slideshowState, refs]);
+  }, [
+    activeIndex,
+    options?.alignment,
+    options?.isVertical,
+    options?.dependentContainerRef,
+    slideshowState,
+    refs,
+  ]);
 
   return useMemo(
     () => ({

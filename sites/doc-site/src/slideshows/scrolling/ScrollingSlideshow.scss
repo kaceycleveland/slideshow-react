@@ -1,63 +1,65 @@
-.scrolling-gallery-container {
-  position: relative;
-  white-space: nowrap;
-  width: 600px;
-  height: 600px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-
-  .image-container {
-    scroll-snap-align: center;
+.scrolling-container {
+  .scrolling-gallery-container {
     position: relative;
-    display: inline-block;
+    white-space: nowrap;
     width: 600px;
     height: 600px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
 
-    .blur-image {
-      position: absolute;
-      opacity: 1;
-      transition: opacity 0.2s linear;
+    .image-container {
+      scroll-snap-align: center;
+      position: relative;
+      display: inline-block;
+      width: 600px;
+      height: 600px;
 
-      &.hide {
-        opacity: 0;
+      .blur-image {
+        position: absolute;
+        opacity: 1;
+        transition: opacity 0.2s linear;
+
+        &.hide {
+          opacity: 0;
+        }
       }
     }
   }
-}
 
-.image-gallery-thumbnail-container {
-  position: relative;
-  white-space: nowrap;
-  width: 600px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-
-  .thumbnail-image-container {
-    scroll-snap-align: start;
+  .image-gallery-thumbnail-container {
     position: relative;
-    display: inline-block;
-    width: 200px;
-    height: 200px;
+    white-space: nowrap;
+    width: 600px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
 
-    &.active {
-      border: 5px solid red;
-    }
-
-    .thumbnail-main-image {
+    .thumbnail-image-container {
+      scroll-snap-align: start;
+      position: relative;
+      display: inline-block;
       width: 200px;
       height: 200px;
-    }
 
-    .thumbnail-blur-image {
-      position: absolute;
-      opacity: 1;
-      transition: opacity 0.2s linear;
+      &.active {
+        border: 5px solid red;
+      }
 
-      &.hide {
-        opacity: 0;
-        pointer-events: none;
+      .thumbnail-main-image {
+        width: 200px;
+        height: 200px;
+      }
+
+      .thumbnail-blur-image {
+        position: absolute;
+        opacity: 1;
+        transition: opacity 0.2s linear;
+
+        &.hide {
+          opacity: 0;
+          pointer-events: none;
+        }
       }
     }
   }

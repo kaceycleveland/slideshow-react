@@ -1,12 +1,22 @@
-/* fade in and out */
-.default-container {
-  .default-gallery-container {
+.scrolling-vertical-grid-gallery-container {
+  display: flex;
+
+  .scrolling-gallery-container {
     position: relative;
+    white-space: nowrap;
     width: 600px;
     height: 600px;
+    cursor: grab;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
 
     .image-container {
-      position: absolute;
+      scroll-snap-align: center;
+      position: relative;
+      display: inline-block;
+      width: 600px;
+      height: 600px;
 
       .blur-image {
         position: absolute;
@@ -17,30 +27,35 @@
           opacity: 0;
         }
       }
-
-      &.hide {
-        display: none;
-      }
     }
   }
 
   .image-gallery-thumbnail-container {
     position: relative;
-    white-space: nowrap;
-    width: 600px;
-    overflow-x: auto;
-    overflow-y: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    height: 600px;
+    width: 420px;
+    overflow-x: hidden;
+    overflow-y: auto;
     scroll-snap-type: x mandatory;
 
     .thumbnail-image-container {
       scroll-snap-align: start;
       position: relative;
-      display: inline-block;
       width: 200px;
       height: 200px;
 
-      &.active {
-        border: 5px solid red;
+      &.active:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(34, 167, 240, 0.5);
       }
 
       .thumbnail-main-image {

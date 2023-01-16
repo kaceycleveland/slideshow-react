@@ -1,4 +1,4 @@
-import "./DefaultSlideshow.scss";
+import "./ScrollingVerticalGridGallery.scss";
 import {
   ImageMetadata,
   SlideOptions,
@@ -70,7 +70,7 @@ const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
 };
 
-export const DefaultSlideshow = () => {
+export const ScrollingVerticalGridGallery = () => {
   const {
     rootThumbnailContainerRef,
     rootSlidesContainerRef,
@@ -82,11 +82,13 @@ export const DefaultSlideshow = () => {
   } = useSlideshow(slideOptions, {
     getBlurSrc,
     getThumbnailBlurSrc: getBlurSrc,
+    isScrolling: true,
+    isVertical: true,
   });
 
   return (
-    <div className="default-container">
-      <div ref={rootSlidesContainerRef} className="default-gallery-container">
+    <div className="scrolling-vertical-grid-gallery-container">
+      <div ref={rootSlidesContainerRef} className="scrolling-gallery-container">
         {/* <div className={clsx("loading-indicator", { loading: isLoading })}>
           Loading...
         </div> */}
