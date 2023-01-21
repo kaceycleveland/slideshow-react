@@ -1,5 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
-import { useContainerScroll } from "./useContainerScroll";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounce } from "../utils/useDebounce";
 import { SlideOptions } from "./SlideOptions";
 import { SlideshowOptions } from "./SlideshowOptions";
@@ -11,10 +10,13 @@ import {
 } from "./utils";
 import { DEFAULT_SLIDESHOW_OPTIONS } from "./utils/defaultSlideshowOptions";
 import { useScrollSetup } from "./useScrollSetup";
+import { useThumbnailContainerScroll } from "./useThumbnailContainerScroll";
+import { useSlidesContainerScroll } from "./useSlidesContainerScroll";
 
 export interface SlideshowState {
   transitioning: boolean;
-  manualScrolling: boolean;
+  manualScrollingSlides: boolean;
+  manualScrollingThumbnails: boolean;
   scrollingElement: EventTarget | null;
 }
 
@@ -25,7 +27,8 @@ export const useSlideshow = (
   const slideshowState = useMemo<SlideshowState>(
     () => ({
       transitioning: false,
-      manualScrolling: false,
+      manualScrollingSlides: false,
+      manualScrollingThumbnails: false,
       scrollingElement: null,
     }),
     []
@@ -48,6 +51,11 @@ export const useSlideshow = (
   const [activeSlideIdx, setActiveSlideIdx] = useState(
     options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex
   );
+  const [activeThumbnailIdx, setActiveThumbnailIdx] = useState(
+    options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex
+  );
+
+  console.log(activeSlideIdx, activeThumbnailIdx);
 
   const setSlideIdx = useCallback(
     (idx: number) => {
@@ -56,12 +64,21 @@ export const useSlideshow = (
       else if (idx < 0) usedIdx = slideOptions.length - 1;
       if (usedIdx !== activeSlideIdx) slideshowState.transitioning = true;
       setActiveSlideIdx(usedIdx);
+      setActiveThumbnailIdx(usedIdx);
       // slideshowState.focusedImageElement = slidesRef.current[usedIdx];
     },
-    [setActiveSlideIdx, activeSlideIdx, slideshowState, slidesRef]
+    [
+      setActiveSlideIdx,
+      setActiveThumbnailIdx,
+      activeSlideIdx,
+      activeThumbnailIdx,
+      slideshowState,
+      slidesRef,
+    ]
   );
 
   const debouncedActiveSlideIdx = useDebounce(activeSlideIdx, 100);
+  const debouncedActiveThumbnailIdx = useDebounce(activeThumbnailIdx, 100);
 
   const parsedSlides: SlideOptions[] = useMemo(() => {
     const assignedSlides: SlideOptions[] = slideOptions.map(
@@ -97,7 +114,7 @@ export const useSlideshow = (
     );
 
     return assignedSlides;
-  }, [slideOptions, thumbnailRefs, options]);
+  }, [slideOptions, setSlideIdx, thumbnailRefs, options]);
 
   const activeSlides: SlideOptions[] = useMemo(() => {
     assignPreloadingDepth(
@@ -117,7 +134,7 @@ export const useSlideshow = (
         base.main.dataIdx = slideIndex;
 
         if (base.thumbnail) {
-          base.thumbnail.active = slideIndex === debouncedActiveSlideIdx;
+          base.thumbnail.active = slideIndex === debouncedActiveThumbnailIdx;
         }
 
         return base;
@@ -128,13 +145,15 @@ export const useSlideshow = (
     parsedSlides,
     options.preloadDepth,
     debouncedActiveSlideIdx,
+    debouncedActiveThumbnailIdx,
     options.nextImageIdxFn,
     options.previousImageIdxFn,
   ]);
 
   useScrollSetup(
     activeSlides.length,
-    setSlideIdx,
+    setActiveSlideIdx,
+    setActiveThumbnailIdx,
     slideshowState,
     slidesRef,
     rootSlidesContainerRef,
@@ -148,7 +167,7 @@ export const useSlideshow = (
     [activeSlides, debouncedActiveSlideIdx]
   );
 
-  const { containerRef } = useContainerScroll(
+  const { containerRef } = useSlidesContainerScroll(
     debouncedActiveSlideIdx,
     slideshowState,
     slidesRef,
@@ -158,13 +177,12 @@ export const useSlideshow = (
     }
   );
 
-  const { containerRef: thumbnailContainerRef } = useContainerScroll(
-    debouncedActiveSlideIdx,
+  const { containerRef: thumbnailContainerRef } = useThumbnailContainerScroll(
+    debouncedActiveThumbnailIdx,
     slideshowState,
     thumbnailRefs,
     {
       passedContainerRef: rootThumbnailContainerRef,
-      isVertical: options.isVertical,
     }
   );
 
@@ -176,6 +194,7 @@ export const useSlideshow = (
     thumbnailRefs,
     active: activeSlide,
     index: debouncedActiveSlideIdx,
+    thumbnailIndex: debouncedActiveThumbnailIdx,
     setSlideIdx,
   };
 };

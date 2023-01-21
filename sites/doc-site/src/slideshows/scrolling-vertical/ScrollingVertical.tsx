@@ -83,7 +83,6 @@ export const ScrollingVertical = () => {
     getBlurSrc,
     getThumbnailBlurSrc: getBlurSrc,
     isScrolling: true,
-    isVertical: true,
   });
 
   return (

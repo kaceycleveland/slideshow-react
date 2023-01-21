@@ -1,11 +1,14 @@
 .scrolling-vertical-container {
   display: flex;
+  width: 100%;
 
   .scrolling-gallery-container {
     position: relative;
     white-space: nowrap;
-    width: 600px;
-    height: 600px;
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    max-height: 600px;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
@@ -14,17 +17,25 @@
       scroll-snap-align: center;
       position: relative;
       display: inline-block;
-      width: 600px;
-      height: 600px;
+      width: 100%;
+      max-width: 600px;
+      height: auto;
 
       .blur-image {
-        position: absolute;
         opacity: 1;
         transition: opacity 0.2s linear;
 
         &.hide {
           opacity: 0;
         }
+      }
+
+      .main-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
       }
     }
   }
@@ -42,16 +53,16 @@
     .thumbnail-image-container {
       scroll-snap-align: start;
       position: relative;
-      width: 200px;
-      height: 200px;
+      width: 100%;
+      height: auto;
 
       &.active {
         border: 5px solid red;
       }
 
       .thumbnail-main-image {
-        width: 200px;
-        height: 200px;
+        width: 100%;
+        height: auto;
       }
 
       .thumbnail-blur-image {

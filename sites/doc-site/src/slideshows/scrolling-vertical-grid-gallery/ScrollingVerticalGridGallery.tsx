@@ -83,7 +83,6 @@ export const ScrollingVerticalGridGallery = () => {
     getBlurSrc,
     getThumbnailBlurSrc: getBlurSrc,
     isScrolling: true,
-    isVertical: true,
   });
 
   return (

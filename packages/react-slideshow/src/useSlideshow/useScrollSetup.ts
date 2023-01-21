@@ -13,27 +13,55 @@ const onIntersection: IntersectionObserverCallback = (entries, observer) => {
   });
 };
 
-const getSelectionObserver: (
-  setSlideIdx: (idx: number) => void,
+const getSlidesSelectionObserver: (
+  setActiveSlideIdx: (idx: number) => void,
   slideshowState: SlideshowState
 ) => IntersectionObserverCallback =
-  (setSlideIdx, slideshowState) => (entries, observer) => {
+  (setActiveSlideIdx, slideshowState) => (entries, observer) => {
+    entries.forEach((entry) => {
+      if (
+        entry.intersectionRatio >= 0.5 &&
+        entry.target instanceof HTMLImageElement
+      ) {
+        console.log(entry.target);
+        if (!entry.target.src) {
+          console.log("LOADING IMAGE");
+          loadImage(entry.target as HTMLImageElement);
+        }
+        if (
+          !slideshowState.manualScrollingSlides &&
+          !slideshowState.transitioning
+        ) {
+          const index = entry.target.getAttribute(DATA_IDX_ATTR);
+          console.log("INTERSECTION BOSERVER", index);
+          index && setActiveSlideIdx(parseInt(index));
+        }
+      }
+    });
+  };
+
+const getThumbnailSelectionObserver: (
+  setActiveThumbnailIdx: (idx: number) => void,
+  slideshowState: SlideshowState
+) => IntersectionObserverCallback =
+  (setActiveThumbnailIdx, slideshowState) => (entries, observer) => {
     entries.forEach((entry) => {
       const index = entry.target.getAttribute(DATA_IDX_ATTR);
-      console.log("INTERSECTION OBSERVER", index, slideshowState);
+      // console.log("INTERSECTION OBSERVER", index, slideshowState);
       if (
         index &&
         entry.intersectionRatio >= 0.5 &&
-        slideshowState.manualScrolling
+        slideshowState.manualScrollingSlides
       ) {
-        setSlideIdx(parseInt(index));
+        setActiveThumbnailIdx(parseInt(index));
       }
     });
   };
 
 export const useScrollSetup = (
   length: number,
-  setSlideIdx: (idx: number) => void,
+  setActiveSlideIdx: (idx: number) => void,
+  setActiveThumbnailIdx: (idx: number) => void,
   slideshowState: SlideshowState,
   slidesRef: MutableRefObject<HTMLImageElement[]>,
   slidesContainerRef: RefObject<HTMLDivElement>,
@@ -54,13 +82,16 @@ export const useScrollSetup = (
   useEffect(() => {
     if (enabled) {
       slidesRef.current = slidesRef.current.slice(0, length);
-      const observer = new IntersectionObserver(onIntersection, {
-        root: slidesContainerRef.current,
-        rootMargin: "0px",
-        threshold: 0.5,
-      });
+      const observer = new IntersectionObserver(
+        getSlidesSelectionObserver(setActiveSlideIdx, slideshowState),
+        {
+          root: slidesContainerRef.current,
+          rootMargin: "0px",
+          threshold: 0.5,
+        }
+      );
       const selectionObserver = new IntersectionObserver(
-        getSelectionObserver(setSlideIdx, slideshowState),
+        getThumbnailSelectionObserver(setActiveThumbnailIdx, slideshowState),
         {
           root: slidesContainerRef.current,
           rootMargin: "0px",
@@ -75,7 +106,7 @@ export const useScrollSetup = (
   }, [
     enabled,
     length,
-    setSlideIdx,
+    setActiveThumbnailIdx,
     slidesRef.current,
     slidesContainerRef.current,
   ]);
@@ -99,13 +130,13 @@ export const useScrollSetup = (
       const setScrollingTarget = (e: MouseEvent | TouchEvent) => {
         slideshowState.scrollingElement = slidesContainerRef.current;
         console.log("mousedown", slideshowState.scrollingElement);
-        slideshowState.manualScrolling = true;
+        slideshowState.manualScrollingSlides = true;
       };
 
       const unsetScrollingTarget = (e: MouseEvent | TouchEvent) => {
         console.log("mouseup");
         slideshowState.scrollingElement = null;
-        slideshowState.manualScrolling = false;
+        slideshowState.manualScrollingSlides = false;
       };
 
       slidesContainerRef.current.onmousedown = setScrollingTarget;

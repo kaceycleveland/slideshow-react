@@ -5,7 +5,6 @@ interface UseContainerScrollOptions {
   alignment?: "left" | "right" | "center" | "top" | "bottom";
   passedContainerRef?: RefObject<HTMLDivElement>;
   dependentContainerRef?: RefObject<HTMLDivElement>;
-  isVertical?: boolean;
 }
 
 const getSpacing = (
@@ -17,7 +16,7 @@ const getSpacing = (
   return remainingSpace / 2;
 };
 
-const performHorizontalScroll = (
+const getHorizontalSpacing = (
   containerElement: HTMLDivElement,
   slideElement: HTMLElement,
   alignment: UseContainerScrollOptions["alignment"]
@@ -28,13 +27,10 @@ const performHorizontalScroll = (
   const remainingSpace = parentWidth - elementWidth;
   const spaceLeft = getSpacing(remainingSpace, alignment);
 
-  containerElement.scrollTo({
-    behavior: "smooth",
-    left: elementOffsetLeft - spaceLeft,
-  });
+  return elementOffsetLeft - spaceLeft;
 };
 
-const performVerticalScroll = (
+const getVerticalSpacing = (
   containerElement: HTMLDivElement,
   slideElement: HTMLElement,
   alignment: UseContainerScrollOptions["alignment"]
@@ -45,15 +41,22 @@ const performVerticalScroll = (
   const remainingSpace = parentHeight - elementHeight;
   const spaceLeft = getSpacing(remainingSpace, alignment);
 
-  console.log("performing vertical scroll");
+  return elementOffsetTop - spaceLeft;
+};
 
+const performScroll = (
+  containerElement: HTMLDivElement,
+  slideElement: HTMLElement,
+  alignment: UseContainerScrollOptions["alignment"]
+) => {
   containerElement.scrollTo({
     behavior: "smooth",
-    top: elementOffsetTop - spaceLeft,
+    top: getVerticalSpacing(containerElement, slideElement, alignment),
+    left: getHorizontalSpacing(containerElement, slideElement, alignment),
   });
 };
 
-export const useContainerScroll = (
+export const useThumbnailContainerScroll = (
   activeIndex: number,
   slideshowState: SlideshowState,
   refs: MutableRefObject<HTMLImageElement[]>,
@@ -65,36 +68,15 @@ export const useContainerScroll = (
     [options?.passedContainerRef]
   );
   useEffect(() => {
-    console.log("before scroll", slideshowState, containerRef.current, refs);
-    if (
-      containerRef.current &&
-      (!slideshowState.manualScrolling ||
-        containerRef.current !== slideshowState.scrollingElement)
-    ) {
-      console.log(
-        "performing scroll",
-        slideshowState.scrollingElement,
-        options.dependentContainerRef?.current
-      );
+    if (containerRef.current && !slideshowState.manualScrollingThumbnails) {
+      console.log("performing thumbnails scroll");
       const targetElement = refs.current[activeIndex].parentElement;
-      if (targetElement) {
-        options?.isVertical
-          ? performVerticalScroll(
-              containerRef.current,
-              targetElement,
-              options.alignment
-            )
-          : performHorizontalScroll(
-              containerRef.current,
-              targetElement,
-              options.alignment
-            );
-      }
+      targetElement &&
+        performScroll(containerRef.current, targetElement, options.alignment);
     }
   }, [
     activeIndex,
     options?.alignment,
-    options?.isVertical,
     options?.dependentContainerRef,
     slideshowState,
     refs,

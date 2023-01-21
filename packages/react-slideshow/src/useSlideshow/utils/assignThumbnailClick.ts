@@ -3,7 +3,7 @@ import { ImageMetadata, ThumbnailMetadata } from "../SlideOptions";
 export const assignThumbnailClick = (
   thumbnailMetadata: ThumbnailMetadata,
   index: number,
-  setActiveSlideIdx: (idx: number) => void
+  setActiveThumbnailIdx: (idx: number) => void
 ) => {
-  thumbnailMetadata.onThumbnailClick = () => setActiveSlideIdx(index);
+  thumbnailMetadata.onThumbnailClick = () => setActiveThumbnailIdx(index);
 };
