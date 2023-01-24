@@ -90,8 +90,7 @@ export const ScrollingVertical = () => {
       mainImg: "absolute inset-0 w-full h-full",
     },
     defaultThumbnailClasses: {
-      container:
-        "snap-start relative w-full transition-opacity [&.hide]:opacity-20",
+      container: "relative w-full transition-opacity [&.hide]:opacity-20",
       blurImg:
         "relative z-10 w-full h-full transition-opacity opacity-100 [&.hide]:opacity-0",
       mainImg: "absolute inset-0 w-full h-full",
@@ -99,7 +98,7 @@ export const ScrollingVertical = () => {
   });
 
   return (
-    <div className="flex w-full max-h-[42rem]">
+    <div className="flex w-full h-[80vw] max-h-[38rem]">
       <div
         ref={rootSlidesContainerRef}
         className="relative whitespace-nowrap w-full max-w-2xl h-auto max-h-2xl overflow-x-auto overflow-y-hidden snap-x snap-mandatory"
@@ -113,7 +112,7 @@ export const ScrollingVertical = () => {
       </div>
       <div
         ref={rootThumbnailContainerRef}
-        className="relative flex flex-col whitespace-pre-wrap overflow-x-hidden overflow-y-auto snap-y snap-mandatory"
+        className="relative flex flex-col whitespace-pre-wrap overflow-x-hidden overflow-y-auto"
       >
         {slides.map(
           (slide, idx) =>

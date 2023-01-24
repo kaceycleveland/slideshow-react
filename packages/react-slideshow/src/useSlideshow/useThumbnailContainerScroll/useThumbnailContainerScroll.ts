@@ -4,7 +4,6 @@ import { SlideshowState } from "../useSlideshow";
 interface UseContainerScrollOptions {
   alignment?: "left" | "right" | "center" | "top" | "bottom";
   passedContainerRef?: RefObject<HTMLDivElement>;
-  dependentContainerRef?: RefObject<HTMLDivElement>;
 }
 
 const getSpacing = (
@@ -74,13 +73,7 @@ export const useThumbnailContainerScroll = (
       targetElement &&
         performScroll(containerRef.current, targetElement, options.alignment);
     }
-  }, [
-    activeIndex,
-    options?.alignment,
-    options?.dependentContainerRef,
-    slideshowState,
-    refs,
-  ]);
+  }, [activeIndex, options?.alignment, slideshowState, refs]);
 
   return useMemo(
     () => ({

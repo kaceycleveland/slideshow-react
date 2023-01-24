@@ -17,6 +17,7 @@ export default defineConfig({
       formats: ["es", "umd"],
       fileName: (format) => `react-slideshow.${format}.js`,
     },
+    sourcemap: true,
     rollupOptions: {
       external: ["react", "react-dom"],
       output: {

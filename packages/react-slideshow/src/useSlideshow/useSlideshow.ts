@@ -12,27 +12,20 @@ import { DEFAULT_SLIDESHOW_OPTIONS } from "./utils/defaultSlideshowOptions";
 import { useScrollSetup } from "./useScrollSetup";
 import { useThumbnailContainerScroll } from "./useThumbnailContainerScroll";
 import { useSlidesContainerScroll } from "./useSlidesContainerScroll";
+import waitForScrollEnd from "../utils/waitForScrollEnd";
+import { performScroll } from "../utils/performScroll";
 
 export interface SlideshowState {
-  transitioning: boolean;
   manualScrollingSlides: boolean;
   manualScrollingThumbnails: boolean;
-  scrollingElement: EventTarget | null;
+  activeSlideIdx: number;
+  // slidesTransitioningFromClick: boolean;
 }
 
 export const useSlideshow = (
   slideOptions: SlideOptions[],
   passedOptions?: SlideshowOptions
 ) => {
-  const slideshowState = useMemo<SlideshowState>(
-    () => ({
-      transitioning: false,
-      manualScrollingSlides: false,
-      manualScrollingThumbnails: false,
-      scrollingElement: null,
-    }),
-    []
-  );
   const rootSlidesContainerRef = useRef<HTMLDivElement>(null);
   const rootThumbnailContainerRef = useRef<HTMLDivElement>(null);
   const slidesRef = useRef<HTMLImageElement[]>([]);
@@ -48,37 +41,76 @@ export const useSlideshow = (
     }),
     [passedOptions]
   );
-  const [activeSlideIdx, setActiveSlideIdx] = useState(
-    options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex
+  const slideshowState = useMemo<SlideshowState>(
+    () => ({
+      manualScrollingSlides: false,
+      manualScrollingThumbnails: false,
+      activeSlideIdx:
+        options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex,
+      // slidesTransitioningFromClick: false,
+    }),
+    []
   );
+  // const [activeSlideIdx, setActiveSlideIdx] = useState(
+  //   options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex
+  // );
   const [activeThumbnailIdx, setActiveThumbnailIdx] = useState(
     options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex
   );
 
-  console.log(activeSlideIdx, activeThumbnailIdx);
-
   const setSlideIdx = useCallback(
-    (idx: number) => {
+    async (idx: number) => {
       let usedIdx = idx;
       if (idx >= slideOptions.length) usedIdx = 0;
       else if (idx < 0) usedIdx = slideOptions.length - 1;
-      if (usedIdx !== activeSlideIdx) slideshowState.transitioning = true;
-      setActiveSlideIdx(usedIdx);
+      // slideshowState.slidesTransitioningFromClick = true;
+      // setActiveSlideIdx(usedIdx);
       setActiveThumbnailIdx(usedIdx);
+      const foundParentSlideElement = slidesRef.current[usedIdx].parentElement;
+      if (rootSlidesContainerRef.current && foundParentSlideElement) {
+        console.log(
+          "performing scroll on slides",
+          rootSlidesContainerRef.current,
+          foundParentSlideElement
+        );
+        performScroll(
+          rootSlidesContainerRef.current,
+          foundParentSlideElement,
+          "center"
+        );
+      }
+
+      const foundThumbnailElement =
+        thumbnailRefs.current[usedIdx].parentElement;
+      if (rootThumbnailContainerRef.current && foundThumbnailElement) {
+        performScroll(
+          rootThumbnailContainerRef.current,
+          foundThumbnailElement,
+          "center"
+        );
+      }
+
+      // if (rootSlidesContainerRef.current) {
+      //   waitForScrollEnd(rootSlidesContainerRef.current);
+      // }
       // slideshowState.focusedImageElement = slidesRef.current[usedIdx];
     },
     [
-      setActiveSlideIdx,
+      // setActiveSlideIdx,
+      rootSlidesContainerRef,
+      rootThumbnailContainerRef,
+      thumbnailRefs,
+      slidesRef,
       setActiveThumbnailIdx,
-      activeSlideIdx,
+      // activeSlideIdx,
       activeThumbnailIdx,
       slideshowState,
       slidesRef,
     ]
   );
 
-  const debouncedActiveSlideIdx = useDebounce(activeSlideIdx, 100);
-  const debouncedActiveThumbnailIdx = useDebounce(activeThumbnailIdx, 100);
+  // const debouncedActiveSlideIdx = useDebounce(activeSlideIdx, 100);
+  // const debouncedActiveThumbnailIdx = useDebounce(activeThumbnailIdx, 100);
 
   const parsedSlides: SlideOptions[] = useMemo(() => {
     const assignedSlides: SlideOptions[] = slideOptions.map(
@@ -120,7 +152,7 @@ export const useSlideshow = (
     assignPreloadingDepth(
       parsedSlides,
       options.preloadDepth,
-      debouncedActiveSlideIdx,
+      activeThumbnailIdx,
       options.nextImageIdxFn,
       options.previousImageIdxFn
     );
@@ -130,11 +162,11 @@ export const useSlideshow = (
         const base: SlideOptions = { ...slideOption };
 
         // Assign active state to corresponding slide
-        base.main.active = slideIndex === debouncedActiveSlideIdx;
+        base.main.active = slideIndex === activeThumbnailIdx;
         base.main.dataIdx = slideIndex;
 
         if (base.thumbnail) {
-          base.thumbnail.active = slideIndex === debouncedActiveThumbnailIdx;
+          base.thumbnail.active = slideIndex === activeThumbnailIdx;
         }
 
         return base;
@@ -144,15 +176,15 @@ export const useSlideshow = (
   }, [
     parsedSlides,
     options.preloadDepth,
-    debouncedActiveSlideIdx,
-    debouncedActiveThumbnailIdx,
+    activeThumbnailIdx,
+    activeThumbnailIdx,
     options.nextImageIdxFn,
     options.previousImageIdxFn,
   ]);
 
   useScrollSetup(
     activeSlides.length,
-    setActiveSlideIdx,
+    setActiveThumbnailIdx,
     setActiveThumbnailIdx,
     slideshowState,
     slidesRef,
@@ -163,38 +195,37 @@ export const useSlideshow = (
   );
 
   const activeSlide = useMemo(
-    () => activeSlides[debouncedActiveSlideIdx],
-    [activeSlides, debouncedActiveSlideIdx]
+    () => activeSlides[activeThumbnailIdx],
+    [activeSlides, activeThumbnailIdx]
   );
 
-  const { containerRef } = useSlidesContainerScroll(
-    debouncedActiveSlideIdx,
-    slideshowState,
-    slidesRef,
-    {
-      passedContainerRef: rootSlidesContainerRef,
-      dependentContainerRef: rootSlidesContainerRef,
-    }
-  );
+  // const { containerRef } = useSlidesContainerScroll(
+  //   activeSlideIdx,
+  //   slideshowState,
+  //   slidesRef,
+  //   {
+  //     passedContainerRef: rootSlidesContainerRef,
+  //   }
+  // );
 
-  const { containerRef: thumbnailContainerRef } = useThumbnailContainerScroll(
-    debouncedActiveThumbnailIdx,
-    slideshowState,
-    thumbnailRefs,
-    {
-      passedContainerRef: rootThumbnailContainerRef,
-    }
-  );
+  // const { containerRef: thumbnailContainerRef } = useThumbnailContainerScroll(
+  //   activeThumbnailIdx,
+  //   slideshowState,
+  //   thumbnailRefs,
+  //   {
+  //     passedContainerRef: rootThumbnailContainerRef,
+  //   }
+  // );
 
   return {
     slides: activeSlides,
     slideshowState,
-    rootSlidesContainerRef: containerRef,
-    rootThumbnailContainerRef: thumbnailContainerRef,
+    rootSlidesContainerRef: rootSlidesContainerRef,
+    rootThumbnailContainerRef: rootThumbnailContainerRef,
     thumbnailRefs,
     active: activeSlide,
-    index: debouncedActiveSlideIdx,
-    thumbnailIndex: debouncedActiveThumbnailIdx,
+    index: activeThumbnailIdx,
+    thumbnailIndex: activeThumbnailIdx,
     setSlideIdx,
   };
 };
