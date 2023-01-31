@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useDebounce } from "../utils/useDebounce";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { SlideOptions } from "./SlideOptions";
 import { SlideshowOptions } from "./SlideshowOptions";
 import {
@@ -10,16 +9,12 @@ import {
 } from "./utils";
 import { DEFAULT_SLIDESHOW_OPTIONS } from "./utils/defaultSlideshowOptions";
 import { useScrollSetup } from "./useScrollSetup";
-import { useThumbnailContainerScroll } from "./useThumbnailContainerScroll";
-import { useSlidesContainerScroll } from "./useSlidesContainerScroll";
-import waitForScrollEnd from "../utils/waitForScrollEnd";
 import { performScroll } from "../utils/performScroll";
 
 export interface SlideshowState {
   manualScrollingSlides: boolean;
   manualScrollingThumbnails: boolean;
   activeSlideIdx: number;
-  // slidesTransitioningFromClick: boolean;
 }
 
 export const useSlideshow = (
@@ -46,14 +41,10 @@ export const useSlideshow = (
       manualScrollingSlides: false,
       manualScrollingThumbnails: false,
       activeSlideIdx:
-        options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex,
-      // slidesTransitioningFromClick: false,
+        options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex ?? 0,
     }),
     []
   );
-  // const [activeSlideIdx, setActiveSlideIdx] = useState(
-  //   options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex
-  // );
   const [activeThumbnailIdx, setActiveThumbnailIdx] = useState(
     options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex
   );
@@ -63,16 +54,9 @@ export const useSlideshow = (
       let usedIdx = idx;
       if (idx >= slideOptions.length) usedIdx = 0;
       else if (idx < 0) usedIdx = slideOptions.length - 1;
-      // slideshowState.slidesTransitioningFromClick = true;
-      // setActiveSlideIdx(usedIdx);
       setActiveThumbnailIdx(usedIdx);
       const foundParentSlideElement = slidesRef.current[usedIdx].parentElement;
       if (rootSlidesContainerRef.current && foundParentSlideElement) {
-        console.log(
-          "performing scroll on slides",
-          rootSlidesContainerRef.current,
-          foundParentSlideElement
-        );
         performScroll(
           rootSlidesContainerRef.current,
           foundParentSlideElement,
@@ -86,31 +70,21 @@ export const useSlideshow = (
         performScroll(
           rootThumbnailContainerRef.current,
           foundThumbnailElement,
-          "center"
+          options.scrollAlignment
         );
       }
-
-      // if (rootSlidesContainerRef.current) {
-      //   waitForScrollEnd(rootSlidesContainerRef.current);
-      // }
-      // slideshowState.focusedImageElement = slidesRef.current[usedIdx];
     },
     [
-      // setActiveSlideIdx,
       rootSlidesContainerRef,
       rootThumbnailContainerRef,
       thumbnailRefs,
       slidesRef,
       setActiveThumbnailIdx,
-      // activeSlideIdx,
       activeThumbnailIdx,
       slideshowState,
       slidesRef,
     ]
   );
-
-  // const debouncedActiveSlideIdx = useDebounce(activeSlideIdx, 100);
-  // const debouncedActiveThumbnailIdx = useDebounce(activeThumbnailIdx, 100);
 
   const parsedSlides: SlideOptions[] = useMemo(() => {
     const assignedSlides: SlideOptions[] = slideOptions.map(
@@ -199,24 +173,6 @@ export const useSlideshow = (
     [activeSlides, activeThumbnailIdx]
   );
 
-  // const { containerRef } = useSlidesContainerScroll(
-  //   activeSlideIdx,
-  //   slideshowState,
-  //   slidesRef,
-  //   {
-  //     passedContainerRef: rootSlidesContainerRef,
-  //   }
-  // );
-
-  // const { containerRef: thumbnailContainerRef } = useThumbnailContainerScroll(
-  //   activeThumbnailIdx,
-  //   slideshowState,
-  //   thumbnailRefs,
-  //   {
-  //     passedContainerRef: rootThumbnailContainerRef,
-  //   }
-  // );
-
   return {
     slides: activeSlides,
     slideshowState,
@@ -225,7 +181,6 @@ export const useSlideshow = (
     thumbnailRefs,
     active: activeSlide,
     index: activeThumbnailIdx,
-    thumbnailIndex: activeThumbnailIdx,
     setSlideIdx,
   };
 };

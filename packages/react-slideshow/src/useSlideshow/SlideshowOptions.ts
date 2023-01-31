@@ -1,3 +1,4 @@
+import { ScrollAlignment } from "../utils/performScroll";
 import { ImageMetadata, SlideOptions } from "./SlideOptions";
 import { SlideshowClasses } from "./SlideshowClasses";
 
@@ -18,4 +19,5 @@ export interface SlideshowOptions {
   defaultClasses?: SlideshowClasses;
   defaultThumbnailClasses?: SlideshowClasses;
   isScrolling?: boolean;
+  scrollAlignment?: ScrollAlignment;
 }

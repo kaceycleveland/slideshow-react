@@ -1,3 +1,4 @@
+import { ScrollAlignment } from "../../utils/performScroll";
 import { NavigateImageFn, SlideshowOptions } from "../SlideshowOptions";
 
 // const preloadImage: SlideshowOptions["preloadImage"] = (
@@ -45,4 +46,5 @@ export const DEFAULT_SLIDESHOW_OPTIONS = {
     blurImg: "thumbnail-blur-image",
   },
   getThumbnailClick,
+  scrollAlignment: "center" as ScrollAlignment,
 };

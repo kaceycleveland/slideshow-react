@@ -1,4 +1,4 @@
-type ScrollAlignment = "left" | "right" | "center" | "top" | "bottom";
+export type ScrollAlignment = "left" | "right" | "center" | "top" | "bottom";
 
 const getSpacing = (remainingSpace: number, alignment?: ScrollAlignment) => {
   if (alignment === "left" || alignment === "top") return 0;
