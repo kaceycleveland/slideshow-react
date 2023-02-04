@@ -1,14 +1,60 @@
 {
-  "name": "react-slideshow-main",
+  "name": "react-slideshow",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "docs:dev": "yarn workspace doc-site vite",
-    "build": "yarn workspace react-slideshow build"
+    "dev": "vite",
+    "build": "tsc --project tsconfig.build.json && vite build",
+    "preview": "vite preview",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "sites/*"
-    ]
-  }
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@storybook/addon-actions": "^6.5.16",
+    "@storybook/addon-essentials": "^6.5.16",
+    "@storybook/addon-interactions": "^6.5.16",
+    "@storybook/addon-links": "^6.5.16",
+    "@storybook/builder-vite": "^0.3.0",
+    "@storybook/react": "^6.5.16",
+    "@storybook/testing-library": "^0.0.13",
+    "@types/node": "^18.11.18",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "@vitejs/plugin-react": "^3.0.0",
+    "autoprefixer": "^10.4.13",
+    "babel-loader": "^8.3.0",
+    "chromatic": "^6.15.0",
+    "clsx": "^1.2.1",
+    "postcss": "^8.4.21",
+    "sass": "^1.58.0",
+    "tailwindcss": "^3.2.4",
+    "typescript": "^4.9.3",
+    "vite": "^4.0.0",
+    "vite-plugin-dts": "^1.7.1"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || 17.x",
+    "react-dom": "^16.8.0 || 17.x",
+    "styled-components": "^5.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/react-slideshow.umd.js",
+  "module": "./dist/react-slideshow.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/react-slideshow.es.js",
+      "require": "./dist/react-slideshow.umd.js"
+    }
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "react-slideshow@0.0.0"
 }
