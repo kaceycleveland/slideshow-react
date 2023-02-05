@@ -7,12 +7,14 @@ import {
   SlideshowThumbnail,
 } from "../../src/main";
 import { DefaultSlides } from "../shared";
+import { ComponentStoryObj } from "@storybook/react";
+import { basicSlideshowTest } from "../shared/tests/BasicSlideshowTest";
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
 };
 
-export const ScrollingSlideshow = () => {
+const ScrollingSlideshowComponent = () => {
   const {
     rootThumbnailContainerRef,
     rootSlidesContainerRef,
@@ -29,7 +31,11 @@ export const ScrollingSlideshow = () => {
 
   return (
     <div className="scrolling-container">
-      <div ref={rootSlidesContainerRef} className="scrolling-gallery-container">
+      <div
+        ref={rootSlidesContainerRef}
+        className="scrolling-gallery-container"
+        data-testid="slide-image-container"
+      >
         {/* <div className={clsx("loading-indicator", { loading: isLoading })}>
           Loading...
         </div> */}
@@ -54,5 +60,13 @@ export const ScrollingSlideshow = () => {
 
 export default {
   title: "Slideshow",
-  component: ScrollingSlideshow,
+  component: ScrollingSlideshowComponent,
+};
+
+export const ScrollingSlideshow: ComponentStoryObj<
+  typeof ScrollingSlideshowComponent
+> = {
+  play: async (context) => {
+    await basicSlideshowTest(context);
+  },
 };

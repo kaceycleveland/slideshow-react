@@ -1,8 +1,6 @@
 import { MutableRefObject, RefObject, useEffect } from "react";
 import debounce from "../utils/debounce";
-import { getScrollParent } from "../utils/getScrollParent";
 import { performScroll } from "../utils/performScroll";
-import waitForScrollEnd from "../utils/waitForScrollEnd";
 import { DATA_IDX_ATTR } from "./Constants";
 import { SlideshowState } from "./useSlideshow";
 import { loadImage } from "./utils/loadImage";

@@ -1,6 +1,9 @@
 .scrolling-vertical-container {
   display: flex;
-  width: 100%;
+
+  &:focus {
+    border: 2px solid red;
+  }
 
   .scrolling-gallery-container {
     position: relative;

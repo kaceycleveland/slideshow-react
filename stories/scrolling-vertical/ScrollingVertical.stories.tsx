@@ -7,12 +7,17 @@ import {
   SlideshowThumbnail,
 } from "../../src/main";
 import { DefaultSlides } from "../shared";
+import type { ComponentStoryObj } from "@storybook/react";
+import { expect } from "@storybook/jest";
+import { within, userEvent } from "@storybook/testing-library";
+import { LEFT_KEY, RIGHT_KEY } from "../../src/useSlideshow/Constants";
+import { basicSlideshowTest } from "../shared/tests/BasicSlideshowTest";
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
 };
 
-export const ScrollingVertical = () => {
+const ScrollingVerticalComponent = () => {
   const {
     rootThumbnailContainerRef,
     rootSlidesContainerRef,
@@ -29,7 +34,11 @@ export const ScrollingVertical = () => {
 
   return (
     <div className="scrolling-vertical-container">
-      <div ref={rootSlidesContainerRef} className="scrolling-gallery-container">
+      <div
+        ref={rootSlidesContainerRef}
+        className="scrolling-gallery-container"
+        data-testid="slide-image-container"
+      >
         {/* <div className={clsx("loading-indicator", { loading: isLoading })}>
           Loading...
         </div> */}
@@ -54,5 +63,13 @@ export const ScrollingVertical = () => {
 
 export default {
   title: "Slideshow",
-  component: ScrollingVertical,
+  component: ScrollingVerticalComponent,
+};
+
+export const ScrollingVertical: ComponentStoryObj<
+  typeof ScrollingVerticalComponent
+> = {
+  play: async (context) => {
+    await basicSlideshowTest(context);
+  },
 };

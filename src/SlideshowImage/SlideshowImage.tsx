@@ -46,6 +46,7 @@ export const SlideshowImage = forwardRef<
         <img
           className={clsx(classes?.mainImg)}
           ref={ref}
+          onFocus={() => console.log("FOCUSED2", containerId)}
           {...{ [DATA_SRC_ATTR]: src, [DATA_IDX_ATTR]: dataIdx }}
           {...imgProps}
           // loading={active ? "eager" : loading ?? "lazy"}

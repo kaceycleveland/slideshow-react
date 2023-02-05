@@ -41,7 +41,6 @@ export const performScroll = (
 ) => {
   const top = getVerticalSpacing(containerElement, slideElement, alignment);
   const left = getHorizontalSpacing(containerElement, slideElement, alignment);
-  console.log("top spacing", top, left);
   containerElement.scrollTo({
     behavior: "smooth",
     top,

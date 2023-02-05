@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SlideOptions } from "./SlideOptions";
 import { SlideshowOptions } from "./SlideshowOptions";
 import {
@@ -10,6 +10,7 @@ import {
 import { DEFAULT_SLIDESHOW_OPTIONS } from "./utils/defaultSlideshowOptions";
 import { useScrollSetup } from "./useScrollSetup";
 import { performScroll } from "../utils/performScroll";
+import { LEFT_KEY, RIGHT_KEY } from "./Constants";
 
 export interface SlideshowState {
   manualScrollingSlides: boolean;
@@ -172,6 +173,32 @@ export const useSlideshow = (
     () => activeSlides[activeThumbnailIdx],
     [activeSlides, activeThumbnailIdx]
   );
+
+  useEffect(() => {
+    if (rootSlidesContainerRef.current && rootThumbnailContainerRef.current) {
+      const setNextSlideIdx = (e: KeyboardEvent) => {
+        if (document.activeElement === e.target) {
+          if (e.code === LEFT_KEY) {
+            e.preventDefault();
+            setSlideIdx(activeThumbnailIdx - 1);
+          }
+          if (e.code === RIGHT_KEY) {
+            e.preventDefault();
+            setSlideIdx(activeThumbnailIdx + 1);
+          }
+        }
+      };
+      rootSlidesContainerRef.current.tabIndex = 0;
+      rootSlidesContainerRef.current.onkeydown = setNextSlideIdx;
+      rootThumbnailContainerRef.current.tabIndex = 0;
+      rootThumbnailContainerRef.current.onkeydown = setNextSlideIdx;
+    }
+  }, [
+    rootSlidesContainerRef,
+    rootThumbnailContainerRef,
+    setSlideIdx,
+    activeThumbnailIdx,
+  ]);
 
   return {
     slides: activeSlides,

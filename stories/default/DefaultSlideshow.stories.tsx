@@ -7,12 +7,14 @@ import {
   SlideshowThumbnail,
 } from "../../src/main";
 import { DefaultSlides } from "../shared";
+import { basicSlideshowTest } from "../shared/tests/BasicSlideshowTest";
+import { ComponentStoryObj } from "@storybook/react";
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
 };
 
-export const DefaultSlideshow = () => {
+const DefaultSlideshowComponent = () => {
   const {
     rootThumbnailContainerRef,
     rootSlidesContainerRef,
@@ -28,7 +30,11 @@ export const DefaultSlideshow = () => {
 
   return (
     <div className="default-container">
-      <div ref={rootSlidesContainerRef} className="default-gallery-container">
+      <div
+        ref={rootSlidesContainerRef}
+        className="default-gallery-container"
+        data-testid="slide-image-container"
+      >
         {/* <div className={clsx("loading-indicator", { loading: isLoading })}>
           Loading...
         </div> */}
@@ -53,5 +59,13 @@ export const DefaultSlideshow = () => {
 
 export default {
   title: "Slideshow",
-  component: DefaultSlideshow,
+  component: DefaultSlideshowComponent,
+};
+
+export const DefaultSlideshow: ComponentStoryObj<
+  typeof DefaultSlideshowComponent
+> = {
+  play: async (context) => {
+    await basicSlideshowTest(context);
+  },
 };

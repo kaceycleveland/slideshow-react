@@ -34,6 +34,7 @@ export const SlideshowThumbnail = forwardRef<
           active,
         })}
         onClick={onThumbnailClick}
+        data-testid="slide-thumbnail"
         id={containerId}
       >
         {blurImgProps && (
