@@ -11,7 +11,11 @@ import type { ComponentStoryObj } from "@storybook/react";
 import { expect } from "@storybook/jest";
 import { within, userEvent } from "@storybook/testing-library";
 import { LEFT_KEY, RIGHT_KEY } from "../../src/useSlideshow/Constants";
-import { basicSlideshowTest } from "../shared/tests/BasicSlideshowTest";
+import {
+  basicSlideshowTest,
+  SLIDE_IMAGE_CONTAINER_TEST_ID,
+  SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID,
+} from "../shared/tests/BasicSlideshowTest";
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
@@ -37,7 +41,7 @@ const ScrollingVerticalComponent = () => {
       <div
         ref={rootSlidesContainerRef}
         className="scrolling-gallery-container"
-        data-testid="slide-image-container"
+        data-testid={SLIDE_IMAGE_CONTAINER_TEST_ID}
       >
         {/* <div className={clsx("loading-indicator", { loading: isLoading })}>
           Loading...
@@ -49,6 +53,7 @@ const ScrollingVerticalComponent = () => {
       <div
         ref={rootThumbnailContainerRef}
         className="image-gallery-thumbnail-container"
+        data-testid={SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID}
       >
         {slides.map(
           (slide, idx) =>

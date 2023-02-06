@@ -7,7 +7,11 @@ import {
   SlideshowThumbnail,
 } from "../../src/main";
 import { DefaultSlides } from "../shared";
-import { basicSlideshowTest } from "../shared/tests/BasicSlideshowTest";
+import {
+  basicSlideshowTest,
+  SLIDE_IMAGE_CONTAINER_TEST_ID,
+  SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID,
+} from "../shared/tests/BasicSlideshowTest";
 import { ComponentStoryObj } from "@storybook/react";
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
@@ -33,7 +37,7 @@ const DefaultSlideshowComponent = () => {
       <div
         ref={rootSlidesContainerRef}
         className="default-gallery-container"
-        data-testid="slide-image-container"
+        data-testid={SLIDE_IMAGE_CONTAINER_TEST_ID}
       >
         {/* <div className={clsx("loading-indicator", { loading: isLoading })}>
           Loading...
@@ -45,6 +49,7 @@ const DefaultSlideshowComponent = () => {
       <div
         ref={rootThumbnailContainerRef}
         className="image-gallery-thumbnail-container"
+        data-testid={SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID}
       >
         {slides.map(
           (slide, idx) =>
