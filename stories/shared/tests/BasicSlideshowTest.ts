@@ -30,4 +30,6 @@ export const basicSlideshowTest: PlayFunction<ReactFramework, unknown> =
     await userEvent.click(slidesThumbnailContainer);
     await userEvent.keyboard(`[${LEFT_KEY}]`);
     await expect(slideThumbnails[0].className).toContain("active");
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
   };
