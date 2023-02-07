@@ -65,10 +65,6 @@ const DefaultSlideshowComponent = () => {
 export default {
   title: "Slideshow",
   component: DefaultSlideshowComponent,
-  parameters: {
-    // Sets a delay for the component's stories
-    chromatic: { delay: 300 },
-  },
 };
 
 export const DefaultSlideshow: ComponentStoryObj<
@@ -76,9 +72,5 @@ export const DefaultSlideshow: ComponentStoryObj<
 > = {
   play: async (context) => {
     await basicSlideshowTest(context);
-  },
-  parameters: {
-    // Sets a delay for the component's stories
-    chromatic: { delay: 300 },
   },
 };

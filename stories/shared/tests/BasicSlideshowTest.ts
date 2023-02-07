@@ -1,6 +1,11 @@
 import type { ReactFramework } from "@storybook/react";
 import { expect } from "@storybook/jest";
-import { within, userEvent, fireEvent } from "@storybook/testing-library";
+import {
+  within,
+  userEvent,
+  fireEvent,
+  waitFor,
+} from "@storybook/testing-library";
 import { LEFT_KEY, RIGHT_KEY } from "../../../src/useSlideshow/Constants";
 import { PlayFunction } from "@storybook/csf";
 
@@ -31,4 +36,8 @@ export const basicSlideshowTest: PlayFunction<ReactFramework, unknown> =
     await expect(slidesThumbnailContainer).toHaveFocus();
     await userEvent.keyboard(`[${LEFT_KEY}]`);
     await expect(slideThumbnails[0].className).toContain("active");
+    await waitFor(() => {
+      expect(slidesThumbnailContainer.scrollLeft).toBe(0);
+      expect(slidesThumbnailContainer.scrollTop).toBe(0);
+    });
   };
