@@ -42,8 +42,14 @@
       width: 200px;
       height: 200px;
 
-      &.active {
-        border: 5px solid red;
+      &.active:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(34, 167, 240, 0.5);
       }
 
       .thumbnail-main-image {

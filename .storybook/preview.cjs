@@ -6,4 +6,6 @@ export const parameters = {
       date: /Date$/,
     },
   },
-}
+  // Notifies Chromatic to pause the animations when they finish at a global level.
+  chromatic: { pauseAnimationAtEnd: true },
+};
