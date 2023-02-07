@@ -74,4 +74,9 @@ export const ScrollingSlideshow: ComponentStoryObj<
   play: async (context) => {
     await basicSlideshowTest(context);
   },
+  parameters: {
+    chromatic: {
+      delay: 300,
+    },
+  },
 };
