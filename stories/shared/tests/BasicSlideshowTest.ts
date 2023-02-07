@@ -1,6 +1,6 @@
 import type { ReactFramework } from "@storybook/react";
 import { expect } from "@storybook/jest";
-import { within, userEvent } from "@storybook/testing-library";
+import { within, userEvent, fireEvent } from "@storybook/testing-library";
 import { LEFT_KEY, RIGHT_KEY } from "../../../src/useSlideshow/Constants";
 import { PlayFunction } from "@storybook/csf";
 
@@ -21,15 +21,14 @@ export const basicSlideshowTest: PlayFunction<ReactFramework, unknown> =
     await userEvent.click(slideThumbnails[1]);
     await expect(slideThumbnails[1].className).toContain("active");
 
-    await userEvent.click(slidesContainer);
+    slidesContainer.focus();
     await expect(slidesContainer).toHaveFocus();
     await userEvent.keyboard(`[${RIGHT_KEY}]`);
     await expect(slideThumbnails[2].className).toContain("active");
     await userEvent.keyboard(`[${LEFT_KEY}]`);
     await expect(slideThumbnails[1].className).toContain("active");
-    await userEvent.click(slidesThumbnailContainer);
+    slidesThumbnailContainer.focus();
+    await expect(slidesThumbnailContainer).toHaveFocus();
     await userEvent.keyboard(`[${LEFT_KEY}]`);
     await expect(slideThumbnails[0].className).toContain("active");
-
-    await new Promise((resolve) => setTimeout(resolve, 500));
   };
