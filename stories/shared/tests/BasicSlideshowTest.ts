@@ -30,8 +30,8 @@ export const basicSlideshowTest: PlayFunction<ReactFramework, unknown> =
     await expect(slidesContainer).toHaveFocus();
     await userEvent.keyboard(`[${RIGHT_KEY}]`);
     await expect(slideThumbnails[2].className).toContain("active");
-    // await userEvent.keyboard(`[${LEFT_KEY}]`);
-    // await expect(slideThumbnails[1].className).toContain("active");
+    await userEvent.keyboard(`[${LEFT_KEY}]`);
+    await expect(slideThumbnails[1].className).toContain("active");
     // slidesThumbnailContainer.focus();
     // await expect(slidesThumbnailContainer).toHaveFocus();
     // await userEvent.keyboard(`[${LEFT_KEY}]`);
