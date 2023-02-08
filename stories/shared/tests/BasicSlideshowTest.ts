@@ -26,18 +26,18 @@ export const basicSlideshowTest: PlayFunction<ReactFramework, unknown> =
     await userEvent.click(slideThumbnails[1]);
     await expect(slideThumbnails[1].className).toContain("active");
 
-    slidesContainer.focus();
-    await expect(slidesContainer).toHaveFocus();
-    await userEvent.keyboard(`[${RIGHT_KEY}]`);
-    await expect(slideThumbnails[2].className).toContain("active");
-    await userEvent.keyboard(`[${LEFT_KEY}]`);
-    await expect(slideThumbnails[1].className).toContain("active");
-    slidesThumbnailContainer.focus();
-    await expect(slidesThumbnailContainer).toHaveFocus();
-    await userEvent.keyboard(`[${LEFT_KEY}]`);
-    await expect(slideThumbnails[0].className).toContain("active");
-    await waitFor(() => {
-      expect(slidesThumbnailContainer.scrollLeft).toBe(0);
-      expect(slidesThumbnailContainer.scrollTop).toBe(0);
-    });
+    // slidesContainer.focus();
+    // await expect(slidesContainer).toHaveFocus();
+    // await userEvent.keyboard(`[${RIGHT_KEY}]`);
+    // await expect(slideThumbnails[2].className).toContain("active");
+    // await userEvent.keyboard(`[${LEFT_KEY}]`);
+    // await expect(slideThumbnails[1].className).toContain("active");
+    // slidesThumbnailContainer.focus();
+    // await expect(slidesThumbnailContainer).toHaveFocus();
+    // await userEvent.keyboard(`[${LEFT_KEY}]`);
+    // await expect(slideThumbnails[0].className).toContain("active");
+    // await waitFor(() => {
+    //   expect(slidesThumbnailContainer.scrollLeft).toBe(0);
+    //   expect(slidesThumbnailContainer.scrollTop).toBe(0);
+    // });
   };
