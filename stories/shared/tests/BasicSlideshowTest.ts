@@ -8,6 +8,7 @@ import {
 } from "@storybook/testing-library";
 import { LEFT_KEY, RIGHT_KEY } from "../../../src/useSlideshow/Constants";
 import { PlayFunction } from "@storybook/csf";
+import waitForScrollEnd from "./waitForScrollEnd";
 
 export const SLIDE_TEST_ID = "slide-thumbnail";
 export const SLIDE_IMAGE_CONTAINER_TEST_ID = "slide-image-container";
@@ -32,6 +33,7 @@ export const basicSlideshowTest: PlayFunction<ReactFramework, unknown> =
     await expect(slideThumbnails[2].className).toContain("active");
     await userEvent.keyboard(`[${LEFT_KEY}]`);
     await expect(slideThumbnails[1].className).toContain("active");
+    await waitForScrollEnd(slidesThumbnailContainer);
     // slidesThumbnailContainer.focus();
     // await expect(slidesThumbnailContainer).toHaveFocus();
     // await userEvent.keyboard(`[${LEFT_KEY}]`);
