@@ -1,0 +1,79 @@
+.scrolling-no-thumbnail-container {
+  .scrolling-gallery-container {
+    position: relative;
+    white-space: nowrap;
+    width: 600px;
+    height: 600px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+
+    .image-container {
+      scroll-snap-align: center;
+      position: relative;
+      display: inline-block;
+      width: 600px;
+      height: 600px;
+
+      .blur-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 1;
+        transition: opacity 0.2s linear;
+
+        &.hide {
+          opacity: 0;
+        }
+      }
+
+      .main-image {
+        width: 600px;
+        height: 600px;
+      }
+    }
+  }
+
+  .image-gallery-thumbnail-container {
+    position: relative;
+    white-space: nowrap;
+    width: 600px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+
+    .thumbnail-image-container {
+      scroll-snap-align: start;
+      position: relative;
+      display: inline-block;
+      width: 200px;
+      height: 200px;
+
+      &.active:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(34, 167, 240, 0.5);
+      }
+
+      .thumbnail-main-image {
+        width: 200px;
+        height: 200px;
+      }
+
+      .thumbnail-blur-image {
+        position: absolute;
+        opacity: 1;
+        transition: opacity 0.2s linear;
+
+        &.hide {
+          opacity: 0;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+}

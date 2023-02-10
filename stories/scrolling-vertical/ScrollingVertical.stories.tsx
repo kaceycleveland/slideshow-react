@@ -12,11 +12,10 @@ import { expect } from "@storybook/jest";
 import { within, userEvent } from "@storybook/testing-library";
 import { LEFT_KEY, RIGHT_KEY } from "../../src/useSlideshow/Constants";
 import {
-  basicSlideshowTest,
   SLIDE_IMAGE_CONTAINER_TEST_ID,
   SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID,
-} from "../shared/tests/BasicSlideshowTest";
-
+} from "../../src/TestConstants";
+import { basicSlideshowTest } from "../shared/tests";
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
 };

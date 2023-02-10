@@ -24,6 +24,7 @@ const getSlidesSelectionObserver =
       ) {
         if (!entry.target.src) loadImage(entry.target as HTMLImageElement);
         const index = entry.target.getAttribute(DATA_IDX_ATTR);
+        console.log(index);
         if (index) slideshowState.activeSlideIdx = parseInt(index);
       }
     });
@@ -82,15 +83,17 @@ export const useScrollSetup = (
       const unsetScrollingTarget = (e?: MouseEvent | TouchEvent) => {
         slideshowState.manualScrollingSlides = false;
         setActiveThumbnailIdx(slideshowState.activeSlideIdx);
-        const targetThumbnail =
-          thumbnailsRef.current[slideshowState.activeSlideIdx].parentElement;
-        targetThumbnail &&
-          thumbnailsContainerRef.current &&
-          performScroll(
-            thumbnailsContainerRef.current,
-            targetThumbnail,
-            "center"
-          );
+        if (thumbnailsRef.current[slideshowState.activeSlideIdx]) {
+          const targetThumbnail =
+            thumbnailsRef.current[slideshowState.activeSlideIdx].parentElement;
+          targetThumbnail &&
+            thumbnailsContainerRef.current &&
+            performScroll(
+              thumbnailsContainerRef.current,
+              targetThumbnail,
+              "center"
+            );
+        }
       };
 
       slidesContainerRef.current.onmousedown = () => {

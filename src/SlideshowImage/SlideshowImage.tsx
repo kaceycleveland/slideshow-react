@@ -2,6 +2,7 @@ import { ImageMetadata } from "../useSlideshow";
 import clsx from "clsx";
 import { ComponentProps, forwardRef, useCallback, useState } from "react";
 import { DATA_IDX_ATTR, DATA_SRC_ATTR } from "../useSlideshow/Constants";
+import { SLIDE_TEST_ID } from "../TestConstants";
 
 export interface SlideshowImageAddedProps extends ImageMetadata {
   className?: string;
@@ -33,6 +34,7 @@ export const SlideshowImage = forwardRef<
           active,
         })}
         id={containerId}
+        data-testid={SLIDE_TEST_ID}
       >
         {blurImgProps?.src && (
           <img

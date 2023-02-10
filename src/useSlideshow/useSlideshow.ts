@@ -65,12 +65,15 @@ export const useSlideshow = (
         );
       }
 
-      const foundThumbnailElement =
-        thumbnailRefs.current[usedIdx].parentElement;
-      if (rootThumbnailContainerRef.current && foundThumbnailElement) {
+      const foundThumbnailElement = thumbnailRefs.current[usedIdx];
+      if (
+        rootThumbnailContainerRef.current &&
+        foundThumbnailElement &&
+        foundThumbnailElement.parentElement
+      ) {
         performScroll(
           rootThumbnailContainerRef.current,
-          foundThumbnailElement,
+          foundThumbnailElement.parentElement,
           options.scrollAlignment
         );
       }
@@ -175,23 +178,25 @@ export const useSlideshow = (
   );
 
   useEffect(() => {
-    if (rootSlidesContainerRef.current && rootThumbnailContainerRef.current) {
-      const setNextSlideIdx = (e: KeyboardEvent) => {
-        if (document.activeElement === e.target) {
-          if (e.code === LEFT_KEY) {
-            e.preventDefault();
-            setSlideIdx(activeThumbnailIdx - 1);
-          }
-          if (e.code === RIGHT_KEY) {
-            e.preventDefault();
-            setSlideIdx(activeThumbnailIdx + 1);
-          }
+    const setNextSlideIdx = (e: KeyboardEvent) => {
+      if (document.activeElement === e.target) {
+        if (e.code === LEFT_KEY) {
+          e.preventDefault();
+          setSlideIdx(activeThumbnailIdx - 1);
         }
-      };
-      rootSlidesContainerRef.current.tabIndex = 0;
-      rootSlidesContainerRef.current.onkeydown = setNextSlideIdx;
+        if (e.code === RIGHT_KEY) {
+          e.preventDefault();
+          setSlideIdx(activeThumbnailIdx + 1);
+        }
+      }
+    };
+    if (rootThumbnailContainerRef.current) {
       rootThumbnailContainerRef.current.tabIndex = 0;
       rootThumbnailContainerRef.current.onkeydown = setNextSlideIdx;
+    }
+    if (rootSlidesContainerRef.current) {
+      rootSlidesContainerRef.current.tabIndex = 0;
+      rootSlidesContainerRef.current.onkeydown = setNextSlideIdx;
     }
   }, [
     rootSlidesContainerRef,

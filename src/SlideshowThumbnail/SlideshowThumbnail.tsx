@@ -2,6 +2,7 @@ import { ThumbnailMetadata } from "../useSlideshow";
 import clsx from "clsx";
 import { ComponentProps, forwardRef, useCallback, useState } from "react";
 import { DATA_SRC_ATTR } from "../useSlideshow/Constants";
+import { SLIDE_THUMBNAIL_TEST_ID } from "../TestConstants";
 
 export interface SlideshowThumbnailAddedProps extends ThumbnailMetadata {
   className?: string;
@@ -34,7 +35,7 @@ export const SlideshowThumbnail = forwardRef<
           active,
         })}
         onClick={onThumbnailClick}
-        data-testid="slide-thumbnail"
+        data-testid={SLIDE_THUMBNAIL_TEST_ID}
         id={containerId}
       >
         {blurImgProps && (

@@ -9,10 +9,10 @@ import {
 import { DefaultSlides } from "../shared";
 import { ComponentStoryObj } from "@storybook/react";
 import {
-  basicSlideshowTest,
   SLIDE_IMAGE_CONTAINER_TEST_ID,
   SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID,
-} from "../shared/tests/BasicSlideshowTest";
+} from "../../src/TestConstants";
+import { basicSlideshowTest } from "../shared/tests";
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
