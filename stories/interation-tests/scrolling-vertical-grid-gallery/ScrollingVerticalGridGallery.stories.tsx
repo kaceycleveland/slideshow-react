@@ -1,24 +1,24 @@
-import "./ScrollingSlideshow.scss";
+import "./ScrollingVerticalGridGallery.scss";
 import {
   ImageMetadata,
   SlideOptions,
   useSlideshow,
   SlideshowImage,
   SlideshowThumbnail,
-} from "../../src/main";
-import { DefaultSlides } from "../shared";
+} from "../../../src/main";
+import { DefaultSlides } from "../../shared";
 import { ComponentStoryObj } from "@storybook/react";
 import {
   SLIDE_IMAGE_CONTAINER_TEST_ID,
   SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID,
-} from "../../src/TestConstants";
-import { basicSlideshowTest } from "../shared/tests";
+} from "../../../src/TestConstants";
+import { basicSlideshowTest } from "../../shared/tests";
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
 };
 
-const ScrollingSlideshowComponent = () => {
+const ScrollingVerticalGridGalleryComponent = () => {
   const {
     rootThumbnailContainerRef,
     rootSlidesContainerRef,
@@ -34,7 +34,7 @@ const ScrollingSlideshowComponent = () => {
   });
 
   return (
-    <div className="scrolling-container">
+    <div className="scrolling-vertical-grid-gallery-container">
       <div
         ref={rootSlidesContainerRef}
         className="scrolling-gallery-container"
@@ -64,12 +64,12 @@ const ScrollingSlideshowComponent = () => {
 };
 
 export default {
-  title: "Slideshow",
-  component: ScrollingSlideshowComponent,
+  title: "Interaction Tests/Basic",
+  component: ScrollingVerticalGridGalleryComponent,
 };
 
-export const ScrollingSlideshow: ComponentStoryObj<
-  typeof ScrollingSlideshowComponent
+export const ScrollingVerticalGrid: ComponentStoryObj<
+  typeof ScrollingVerticalGridGalleryComponent
 > = {
   play: async (context) => {
     await basicSlideshowTest(context);

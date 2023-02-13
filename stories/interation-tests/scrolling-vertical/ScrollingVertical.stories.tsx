@@ -1,24 +1,23 @@
-import "./DefaultSlideshow.scss";
+import "./ScrollingVertical.scss";
 import {
   ImageMetadata,
   SlideOptions,
   useSlideshow,
   SlideshowImage,
   SlideshowThumbnail,
-} from "../../src/main";
-import { DefaultSlides } from "../shared";
-import { ComponentStoryObj } from "@storybook/react";
+} from "../../../src/main";
+import { DefaultSlides } from "../../shared";
+import type { ComponentStoryObj } from "@storybook/react";
 import {
   SLIDE_IMAGE_CONTAINER_TEST_ID,
   SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID,
-} from "../../src/TestConstants";
-import { basicSlideshowTest } from "../shared/tests";
-
+} from "../../../src/TestConstants";
+import { basicSlideshowTest } from "../../shared/tests";
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
 };
 
-const DefaultSlideshowComponent = () => {
+const ScrollingVerticalComponent = () => {
   const {
     rootThumbnailContainerRef,
     rootSlidesContainerRef,
@@ -30,13 +29,14 @@ const DefaultSlideshowComponent = () => {
   } = useSlideshow(DefaultSlides, {
     getBlurSrc,
     getThumbnailBlurSrc: getBlurSrc,
+    isScrolling: true,
   });
 
   return (
-    <div className="default-container">
+    <div className="scrolling-vertical-container">
       <div
         ref={rootSlidesContainerRef}
-        className="default-gallery-container"
+        className="scrolling-gallery-container"
         data-testid={SLIDE_IMAGE_CONTAINER_TEST_ID}
       >
         {/* <div className={clsx("loading-indicator", { loading: isLoading })}>
@@ -63,12 +63,12 @@ const DefaultSlideshowComponent = () => {
 };
 
 export default {
-  title: "Slideshow",
-  component: DefaultSlideshowComponent,
+  title: "Interaction Tests/Basic",
+  component: ScrollingVerticalComponent,
 };
 
-export const DefaultSlideshow: ComponentStoryObj<
-  typeof DefaultSlideshowComponent
+export const ScrollingVertical: ComponentStoryObj<
+  typeof ScrollingVerticalComponent
 > = {
   play: async (context) => {
     await basicSlideshowTest(context);

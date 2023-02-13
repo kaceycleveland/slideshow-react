@@ -1,7 +1,8 @@
 import { MutableRefObject, RefObject, useEffect } from "react";
 import debounce from "../utils/debounce";
-import { performScroll } from "../utils/performScroll";
+import { performScroll, ScrollAlignment } from "../utils/performScroll";
 import { DATA_IDX_ATTR } from "./Constants";
+import { SlideshowOptions } from "./SlideshowOptions";
 import { SlideshowState } from "./useSlideshow";
 import { loadImage } from "./utils/loadImage";
 
@@ -33,12 +34,12 @@ const getSlidesSelectionObserver =
 export const useScrollSetup = (
   length: number,
   setActiveSlideIdx: (idx: number) => void,
-  setActiveThumbnailIdx: (idx: number) => void,
   slideshowState: SlideshowState,
   slidesRef: MutableRefObject<HTMLImageElement[]>,
   slidesContainerRef: RefObject<HTMLDivElement>,
   thumbnailsRef: MutableRefObject<HTMLImageElement[]>,
   thumbnailsContainerRef: RefObject<HTMLDivElement>,
+  scrollAlignment: ScrollAlignment,
   enabled?: boolean
 ) => {
   useEffect(() => {
@@ -66,13 +67,7 @@ export const useScrollSetup = (
       );
       slidesRef.current.forEach((slide) => observer.observe(slide));
     }
-  }, [
-    enabled,
-    length,
-    setActiveThumbnailIdx,
-    slidesRef.current,
-    slidesContainerRef.current,
-  ]);
+  }, [enabled, length, slidesRef.current, slidesContainerRef.current]);
 
   useEffect(() => {
     if (enabled && slidesContainerRef.current) {
@@ -82,7 +77,7 @@ export const useScrollSetup = (
 
       const unsetScrollingTarget = (e?: MouseEvent | TouchEvent) => {
         slideshowState.manualScrollingSlides = false;
-        setActiveThumbnailIdx(slideshowState.activeSlideIdx);
+        setActiveSlideIdx(slideshowState.activeSlideIdx);
         if (thumbnailsRef.current[slideshowState.activeSlideIdx]) {
           const targetThumbnail =
             thumbnailsRef.current[slideshowState.activeSlideIdx].parentElement;
@@ -91,7 +86,7 @@ export const useScrollSetup = (
             performScroll(
               thumbnailsContainerRef.current,
               targetThumbnail,
-              "center"
+              scrollAlignment
             );
         }
       };
@@ -114,7 +109,7 @@ export const useScrollSetup = (
         unsetScrollingTarget();
       }, 500);
     }
-  }, [slidesContainerRef, setActiveThumbnailIdx]);
+  }, [slidesContainerRef, setActiveSlideIdx, scrollAlignment]);
 
   useEffect(() => {
     if (enabled && thumbnailsContainerRef.current) {

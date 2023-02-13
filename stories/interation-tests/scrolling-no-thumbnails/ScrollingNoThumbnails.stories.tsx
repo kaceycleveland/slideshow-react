@@ -1,9 +1,9 @@
 import "./ScrollingNoThumbnails.scss";
-import { ImageMetadata, useSlideshow, SlideshowImage } from "../../src/main";
-import { DefaultSlides } from "../shared";
+import { ImageMetadata, useSlideshow, SlideshowImage } from "../../../src/main";
+import { DefaultSlides } from "../../shared";
 import { ComponentStoryObj } from "@storybook/react";
-import { SLIDE_IMAGE_CONTAINER_TEST_ID } from "../../src/TestConstants";
-import { basicNoThumbnailTest } from "../shared/tests";
+import { SLIDE_IMAGE_CONTAINER_TEST_ID } from "../../../src/TestConstants";
+import { basicNoThumbnailTest } from "../../shared/tests";
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
@@ -32,7 +32,7 @@ const ScrollingNoThumbnailsComponent = () => {
 };
 
 export default {
-  title: "Slideshow",
+  title: "Interaction Tests/Basic",
   component: ScrollingNoThumbnailsComponent,
 };
 

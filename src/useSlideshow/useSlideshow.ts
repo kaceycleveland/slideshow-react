@@ -46,7 +46,7 @@ export const useSlideshow = (
     }),
     []
   );
-  const [activeThumbnailIdx, setActiveThumbnailIdx] = useState(
+  const [activeSlideIdx, setActiveSlideIdx] = useState(
     options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex
   );
 
@@ -55,7 +55,7 @@ export const useSlideshow = (
       let usedIdx = idx;
       if (idx >= slideOptions.length) usedIdx = 0;
       else if (idx < 0) usedIdx = slideOptions.length - 1;
-      setActiveThumbnailIdx(usedIdx);
+      setActiveSlideIdx(usedIdx);
       const foundParentSlideElement = slidesRef.current[usedIdx].parentElement;
       if (rootSlidesContainerRef.current && foundParentSlideElement) {
         performScroll(
@@ -83,8 +83,8 @@ export const useSlideshow = (
       rootThumbnailContainerRef,
       thumbnailRefs,
       slidesRef,
-      setActiveThumbnailIdx,
-      activeThumbnailIdx,
+      setActiveSlideIdx,
+      activeSlideIdx,
       slideshowState,
       slidesRef,
     ]
@@ -130,7 +130,7 @@ export const useSlideshow = (
     assignPreloadingDepth(
       parsedSlides,
       options.preloadDepth,
-      activeThumbnailIdx,
+      activeSlideIdx,
       options.nextImageIdxFn,
       options.previousImageIdxFn
     );
@@ -140,11 +140,11 @@ export const useSlideshow = (
         const base: SlideOptions = { ...slideOption };
 
         // Assign active state to corresponding slide
-        base.main.active = slideIndex === activeThumbnailIdx;
+        base.main.active = slideIndex === activeSlideIdx;
         base.main.dataIdx = slideIndex;
 
         if (base.thumbnail) {
-          base.thumbnail.active = slideIndex === activeThumbnailIdx;
+          base.thumbnail.active = slideIndex === activeSlideIdx;
         }
 
         return base;
@@ -154,27 +154,26 @@ export const useSlideshow = (
   }, [
     parsedSlides,
     options.preloadDepth,
-    activeThumbnailIdx,
-    activeThumbnailIdx,
+    activeSlideIdx,
     options.nextImageIdxFn,
     options.previousImageIdxFn,
   ]);
 
   useScrollSetup(
     activeSlides.length,
-    setActiveThumbnailIdx,
-    setActiveThumbnailIdx,
+    setActiveSlideIdx,
     slideshowState,
     slidesRef,
     rootSlidesContainerRef,
     thumbnailRefs,
     rootThumbnailContainerRef,
+    options.scrollAlignment,
     passedOptions?.isScrolling
   );
 
   const activeSlide = useMemo(
-    () => activeSlides[activeThumbnailIdx],
-    [activeSlides, activeThumbnailIdx]
+    () => activeSlides[activeSlideIdx],
+    [activeSlides, activeSlideIdx]
   );
 
   useEffect(() => {
@@ -182,11 +181,11 @@ export const useSlideshow = (
       if (document.activeElement === e.target) {
         if (e.code === LEFT_KEY) {
           e.preventDefault();
-          setSlideIdx(activeThumbnailIdx - 1);
+          setSlideIdx(activeSlideIdx - 1);
         }
         if (e.code === RIGHT_KEY) {
           e.preventDefault();
-          setSlideIdx(activeThumbnailIdx + 1);
+          setSlideIdx(activeSlideIdx + 1);
         }
       }
     };
@@ -202,7 +201,7 @@ export const useSlideshow = (
     rootSlidesContainerRef,
     rootThumbnailContainerRef,
     setSlideIdx,
-    activeThumbnailIdx,
+    activeSlideIdx,
   ]);
 
   return {
@@ -212,7 +211,7 @@ export const useSlideshow = (
     rootThumbnailContainerRef: rootThumbnailContainerRef,
     thumbnailRefs,
     active: activeSlide,
-    index: activeThumbnailIdx,
+    index: activeSlideIdx,
     setSlideIdx,
   };
 };
