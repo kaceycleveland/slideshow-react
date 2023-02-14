@@ -5,14 +5,14 @@ import {
   useSlideshow,
   SlideshowImage,
   SlideshowThumbnail,
-} from "../../src/main";
-import { DefaultSlides } from "../shared";
+} from "../../../src/main";
+import { DefaultSlides } from "../../shared";
 import { ComponentStoryObj } from "@storybook/react";
 import {
   SLIDE_IMAGE_CONTAINER_TEST_ID,
   SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID,
-} from "../../src/TestConstants";
-import { basicSlideshowTest } from "../shared/tests";
+} from "../../../src/TestConstants";
+import { basicSlideshowTest } from "../../shared/tests";
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
