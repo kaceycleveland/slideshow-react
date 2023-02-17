@@ -1,4 +1,4 @@
-import "./ScrollingSlideshow.scss";
+import "./BasicExample.scss";
 import {
   ImageMetadata,
   SlideOptions,
@@ -7,18 +7,17 @@ import {
   SlideshowThumbnail,
 } from "../../../src/main";
 import { DefaultSlides } from "../../shared";
-import { ComponentStoryObj } from "@storybook/react";
+import type { ComponentStoryObj } from "@storybook/react";
 import {
   SLIDE_IMAGE_CONTAINER_TEST_ID,
   SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID,
 } from "../../../src/TestConstants";
-import { basicSlideshowTest } from "../../shared/tests";
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
 };
 
-const ScrollingSlideshowComponent = () => {
+export const BasicSlideshow = () => {
   const {
     rootThumbnailContainerRef,
     rootSlidesContainerRef,
@@ -34,7 +33,7 @@ const ScrollingSlideshowComponent = () => {
   });
 
   return (
-    <div className="scrolling-container">
+    <div className="basic-example-container">
       <div
         ref={rootSlidesContainerRef}
         className="scrolling-gallery-container"
@@ -63,14 +62,6 @@ const ScrollingSlideshowComponent = () => {
 };
 
 export default {
-  title: "Interaction Tests/Basic",
-  component: ScrollingSlideshowComponent,
-};
-
-export const ScrollingSlideshow: ComponentStoryObj<
-  typeof ScrollingSlideshowComponent
-> = {
-  play: async (context) => {
-    await basicSlideshowTest(context);
-  },
+  title: "Examples",
+  component: BasicSlideshow,
 };

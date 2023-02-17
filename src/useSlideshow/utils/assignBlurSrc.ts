@@ -1,4 +1,4 @@
-import { ImageMetadata, SlideOptions } from "../SlideOptions";
+import { ImageMetadata } from "../SlideOptions";
 import { SlideshowOptions } from "../SlideshowOptions";
 
 export const assignBlurSrc = (

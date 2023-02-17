@@ -23,9 +23,9 @@ const ScrollingNoThumbnailsComponent = () => {
         className="scrolling-gallery-container"
         data-testid={SLIDE_IMAGE_CONTAINER_TEST_ID}
       >
-        {slides.map((slide, idx) => (
-          <SlideshowImage key={idx} {...slide.main} />
-        ))}
+        {slides.map((slide, idx) => {
+          return "main" in slide && <SlideshowImage key={idx} {...slide} />;
+        })}
       </div>
     </div>
   );

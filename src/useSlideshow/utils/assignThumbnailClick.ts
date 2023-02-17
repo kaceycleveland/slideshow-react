@@ -1,4 +1,4 @@
-import { ImageMetadata, ThumbnailMetadata } from "../SlideOptions";
+import { ThumbnailMetadata } from "../SlideOptions";
 
 export const assignThumbnailClick = (
   thumbnailMetadata: ThumbnailMetadata,

@@ -1,10 +1,9 @@
+import { ReactNode, Ref } from "react";
 import { ImageComponentProps } from "../ImageComponentProps";
-import { SlideshowImageProps } from "../SlideshowImage";
-import { SlideshowThumbnailProps } from "../SlideshowThumbnail";
 
 export interface ImageMetadata {
+  className?: string;
   src: string;
-  dataIdx?: number;
   classes?: {
     container?: string;
     blurImg?: string;
@@ -12,8 +11,8 @@ export interface ImageMetadata {
   };
   blurImgProps?: ImageComponentProps;
   imgProps?: ImageComponentProps;
-  active?: boolean;
   containerId?: string;
+  ref?: Ref<HTMLImageElement>;
 }
 
 export interface ThumbnailMetadata extends ImageMetadata {
@@ -24,7 +23,25 @@ export interface RequiredImageProps {
   imgProps: ImageComponentProps;
 }
 
-export interface SlideOptions {
-  main: SlideshowImageProps;
-  thumbnail?: SlideshowThumbnailProps;
+export interface SharedComponentOptions {
+  dataIdx?: number;
+  active?: boolean;
 }
+
+export interface SlideImageComponentOptions extends SharedComponentOptions {
+  main: ImageMetadata;
+}
+
+export interface SlideImageThumbnailComponentOptions
+  extends SlideImageComponentOptions {
+  thumbnail: ThumbnailMetadata;
+}
+
+export interface SlideshowComponentOptions extends SharedComponentOptions {
+  component: ReactNode;
+}
+
+export type SlideOptions =
+  | SlideImageComponentOptions
+  | SlideImageThumbnailComponentOptions
+  | SlideshowComponentOptions;

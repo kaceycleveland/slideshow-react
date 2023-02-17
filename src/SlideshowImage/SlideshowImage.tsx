@@ -1,29 +1,28 @@
-import { ImageMetadata } from "../useSlideshow";
+import { SlideImageComponentOptions } from "../useSlideshow";
 import clsx from "clsx";
-import { ComponentProps, forwardRef, useCallback, useState } from "react";
+import { forwardRef, useCallback, useState } from "react";
 import { DATA_IDX_ATTR, DATA_SRC_ATTR } from "../useSlideshow/Constants";
 import { SLIDE_TEST_ID } from "../TestConstants";
 
-export interface SlideshowImageAddedProps extends ImageMetadata {
-  className?: string;
-}
-
 export const SlideshowImage = forwardRef<
   HTMLImageElement,
-  SlideshowImageAddedProps
+  SlideImageComponentOptions
 >(
   (
     {
-      className,
-      blurImgProps,
-      classes,
-      imgProps,
       active,
-      containerId,
-      src,
       dataIdx,
+      main: {
+        className,
+        blurImgProps,
+        classes,
+        imgProps,
+        containerId,
+        src,
+        ref,
+      },
     },
-    ref
+    _
   ) => {
     const [showFullQuality, setShowFullQuality] = useState(false);
     const onLoad = useCallback(() => setShowFullQuality(true), []);
@@ -58,5 +57,3 @@ export const SlideshowImage = forwardRef<
     );
   }
 );
-
-export type SlideshowImageProps = ComponentProps<typeof SlideshowImage>;

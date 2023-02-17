@@ -1,6 +1,9 @@
-import { ThumbnailMetadata } from "../useSlideshow";
+import {
+  SlideImageThumbnailComponentOptions,
+  ThumbnailMetadata,
+} from "../useSlideshow";
 import clsx from "clsx";
-import { ComponentProps, forwardRef, useCallback, useState } from "react";
+import { forwardRef, useCallback, useState } from "react";
 import { DATA_SRC_ATTR } from "../useSlideshow/Constants";
 import { SLIDE_THUMBNAIL_TEST_ID } from "../TestConstants";
 
@@ -10,20 +13,23 @@ export interface SlideshowThumbnailAddedProps extends ThumbnailMetadata {
 
 export const SlideshowThumbnail = forwardRef<
   HTMLImageElement,
-  SlideshowThumbnailAddedProps
+  SlideImageThumbnailComponentOptions
 >(
   (
     {
-      className,
+      thumbnail: {
+        className,
+        containerId,
+        imgProps,
+        classes,
+        blurImgProps,
+        onThumbnailClick,
+        src,
+        ref,
+      },
       active,
-      containerId,
-      imgProps,
-      classes,
-      blurImgProps,
-      onThumbnailClick,
-      src,
     },
-    ref
+    _
   ) => {
     const [showFullQuality, setShowFullQuality] = useState(false);
     const onLoad = useCallback(() => setShowFullQuality(true), []);
@@ -60,5 +66,3 @@ export const SlideshowThumbnail = forwardRef<
     );
   }
 );
-
-export type SlideshowThumbnailProps = ComponentProps<typeof SlideshowThumbnail>;

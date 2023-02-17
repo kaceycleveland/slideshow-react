@@ -94,29 +94,29 @@ export const useSlideshow = (
     const assignedSlides: SlideOptions[] = slideOptions.map(
       (slideOption, slideIndex) => {
         const base: SlideOptions = { ...slideOption };
+        base.dataIdx = slideIndex;
+        if ("main" in base) {
+          // Generate and assign blur images to each slide if not defined
+          assignBlurSrc(base.main, options?.getBlurSrc);
 
-        base.main.dataIdx = slideIndex;
+          // Assign default classes to each slide if they are not defined
+          assignDefaultClasses(base.main, options?.defaultClasses);
 
-        // Generate and assign blur images to each slide if not defined
-        assignBlurSrc(base.main, options?.getBlurSrc);
-
-        // Assign default classes to each slide if they are not defined
-        assignDefaultClasses(base.main, options?.defaultClasses);
-
-        base.main.ref = (el) => {
-          if (el) slidesRef.current[slideIndex] = el;
-        };
-
-        if (base.thumbnail) {
-          assignBlurSrc(base.thumbnail, options?.getThumbnailBlurSrc);
-          assignDefaultClasses(
-            base.thumbnail,
-            options?.defaultThumbnailClasses
-          );
-          assignThumbnailClick(base.thumbnail, slideIndex, setSlideIdx);
-          base.thumbnail.ref = (el) => {
-            if (el) thumbnailRefs.current[slideIndex] = el;
+          base.main.ref = (el) => {
+            if (el) slidesRef.current[slideIndex] = el;
           };
+
+          if ("thumbnail" in base) {
+            assignBlurSrc(base.thumbnail, options?.getThumbnailBlurSrc);
+            assignDefaultClasses(
+              base.thumbnail,
+              options?.defaultThumbnailClasses
+            );
+            assignThumbnailClick(base.thumbnail, slideIndex, setSlideIdx);
+            base.thumbnail.ref = (el) => {
+              if (el) thumbnailRefs.current[slideIndex] = el;
+            };
+          }
         }
 
         return base;
@@ -138,14 +138,9 @@ export const useSlideshow = (
     const assignedSlides: SlideOptions[] = parsedSlides.map(
       (slideOption, slideIndex) => {
         const base: SlideOptions = { ...slideOption };
-
         // Assign active state to corresponding slide
-        base.main.active = slideIndex === activeSlideIdx;
-        base.main.dataIdx = slideIndex;
-
-        if (base.thumbnail) {
-          base.thumbnail.active = slideIndex === activeSlideIdx;
-        }
+        base.active = slideIndex === activeSlideIdx;
+        base.dataIdx = slideIndex;
 
         return base;
       }

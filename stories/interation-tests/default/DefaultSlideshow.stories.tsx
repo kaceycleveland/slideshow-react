@@ -42,21 +42,20 @@ const DefaultSlideshowComponent = () => {
         {/* <div className={clsx("loading-indicator", { loading: isLoading })}>
           Loading...
         </div> */}
-        {slides.map((slide, idx) => (
-          <SlideshowImage key={idx} {...slide.main} />
-        ))}
+        {slides.map((slide, idx) => {
+          return "main" in slide && <SlideshowImage key={idx} {...slide} />;
+        })}
       </div>
       <div
         ref={rootThumbnailContainerRef}
         className="image-gallery-thumbnail-container"
         data-testid={SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID}
       >
-        {slides.map(
-          (slide, idx) =>
-            slide.thumbnail && (
-              <SlideshowThumbnail key={idx} {...slide.thumbnail} />
-            )
-        )}
+        {slides.map((slide, idx) => {
+          return (
+            "thumbnail" in slide && <SlideshowThumbnail key={idx} {...slide} />
+          );
+        })}
       </div>
     </div>
   );

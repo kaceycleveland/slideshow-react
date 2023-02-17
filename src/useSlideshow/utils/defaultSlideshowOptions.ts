@@ -1,19 +1,6 @@
 import { ScrollAlignment } from "../../utils/performScroll";
 import { NavigateImageFn, SlideshowOptions } from "../SlideshowOptions";
 
-// const preloadImage: SlideshowOptions["preloadImage"] = (
-//   slideOptions,
-//   slideIdx,
-//   activeIdx
-// ) => {
-//   const nextIdx = activeIdx + 1;
-//   const prevIdx = activeIdx - 1;
-//   if (nextIdx >= slideOptions.length - 1 && slideIdx === 0) return true;
-//   if (prevIdx < 0 && slideIdx === slideOptions.length - 1) return true;
-//   if (nextIdx == slideIdx || prevIdx == slideIdx) return true;
-//   return false;
-// };
-
 const nextImageIdxFn: NavigateImageFn = (slides, activeIdx) => {
   const nextIdx = activeIdx + 1;
   if (nextIdx > slides.length - 1) return 0;
