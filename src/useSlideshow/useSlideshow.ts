@@ -101,22 +101,22 @@ export const useSlideshow = (
 
           // Assign default classes to each slide if they are not defined
           assignDefaultClasses(base.main, options?.defaultClasses);
+        }
 
-          base.main.ref = (el) => {
-            if (el) slidesRef.current[slideIndex] = el;
+        base.ref = (el) => {
+          if (el) slidesRef.current[slideIndex] = el;
+        };
+
+        if ("thumbnail" in base && base.thumbnail) {
+          assignBlurSrc(base.thumbnail, options?.getThumbnailBlurSrc);
+          assignDefaultClasses(
+            base.thumbnail,
+            options?.defaultThumbnailClasses
+          );
+          assignThumbnailClick(base.thumbnail, slideIndex, setSlideIdx);
+          base.thumbnail.ref = (el) => {
+            if (el) thumbnailRefs.current[slideIndex] = el;
           };
-
-          if ("thumbnail" in base) {
-            assignBlurSrc(base.thumbnail, options?.getThumbnailBlurSrc);
-            assignDefaultClasses(
-              base.thumbnail,
-              options?.defaultThumbnailClasses
-            );
-            assignThumbnailClick(base.thumbnail, slideIndex, setSlideIdx);
-            base.thumbnail.ref = (el) => {
-              if (el) thumbnailRefs.current[slideIndex] = el;
-            };
-          }
         }
 
         return base;

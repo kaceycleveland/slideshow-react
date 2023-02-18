@@ -52,9 +52,7 @@ export const BasicSlideshow = () => {
         data-testid={SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID}
       >
         {slides.map((slide, idx) => {
-          return (
-            "thumbnail" in slide && <SlideshowThumbnail key={idx} {...slide} />
-          );
+          return <SlideshowThumbnail key={idx} {...slide} />;
         })}
       </div>
     </div>

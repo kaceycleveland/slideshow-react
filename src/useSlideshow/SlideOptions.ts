@@ -26,15 +26,12 @@ export interface RequiredImageProps {
 export interface SharedComponentOptions {
   dataIdx?: number;
   active?: boolean;
+  ref?: Ref<any>;
+  thumbnail?: ThumbnailMetadata;
 }
 
 export interface SlideImageComponentOptions extends SharedComponentOptions {
   main: ImageMetadata;
-}
-
-export interface SlideImageThumbnailComponentOptions
-  extends SlideImageComponentOptions {
-  thumbnail: ThumbnailMetadata;
 }
 
 export interface SlideshowComponentOptions extends SharedComponentOptions {
@@ -43,5 +40,4 @@ export interface SlideshowComponentOptions extends SharedComponentOptions {
 
 export type SlideOptions =
   | SlideImageComponentOptions
-  | SlideImageThumbnailComponentOptions
   | SlideshowComponentOptions;

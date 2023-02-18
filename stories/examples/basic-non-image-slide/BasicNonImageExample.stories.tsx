@@ -5,16 +5,41 @@ import {
   useSlideshow,
   SlideshowImage,
   SlideshowThumbnail,
+  SlideshowComponentOptions,
 } from "../../../src/main";
 import { DefaultSlides } from "../../shared";
 import {
   SLIDE_IMAGE_CONTAINER_TEST_ID,
   SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID,
 } from "../../../src/TestConstants";
+import { forwardRef } from "react";
+
+const addedDivSlide: SlideOptions[] = [
+  {
+    component: <div className="test-component">TEST</div>,
+    thumbnail: {
+      src: "https://ik.imagekit.io/z2cba9cyv/1.jpg?tr=w-200,h-200",
+    },
+  },
+  ...DefaultSlides,
+];
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
 };
+
+const SlideshowComponent = forwardRef<
+  HTMLDivElement,
+  SlideshowComponentOptions
+>(({ component, dataIdx }, ref) => {
+  return (
+    <div className="content-container">
+      <div ref={ref} data-idx={dataIdx}>
+        {component}
+      </div>
+    </div>
+  );
+});
 
 export const BasicNonImageExample = () => {
   const {
@@ -25,7 +50,7 @@ export const BasicNonImageExample = () => {
     index,
     setSlideIdx,
     slideshowState,
-  } = useSlideshow(DefaultSlides, {
+  } = useSlideshow(addedDivSlide, {
     getBlurSrc,
     getThumbnailBlurSrc: getBlurSrc,
     isScrolling: true,
@@ -42,6 +67,8 @@ export const BasicNonImageExample = () => {
           Loading...
         </div> */}
         {slides.map((slide, idx) => {
+          if ("component" in slide)
+            return <SlideshowComponent key={idx} {...slide} />;
           return "main" in slide && <SlideshowImage key={idx} {...slide} />;
         })}
       </div>
@@ -51,9 +78,7 @@ export const BasicNonImageExample = () => {
         data-testid={SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID}
       >
         {slides.map((slide, idx) => {
-          return (
-            "thumbnail" in slide && <SlideshowThumbnail key={idx} {...slide} />
-          );
+          return <SlideshowThumbnail key={idx} {...slide} />;
         })}
       </div>
     </div>

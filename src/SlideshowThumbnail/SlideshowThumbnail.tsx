@@ -1,5 +1,6 @@
 import {
-  SlideImageThumbnailComponentOptions,
+  SlideImageComponentOptions,
+  SlideOptions,
   ThumbnailMetadata,
 } from "../useSlideshow";
 import clsx from "clsx";
@@ -11,13 +12,13 @@ export interface SlideshowThumbnailAddedProps extends ThumbnailMetadata {
   className?: string;
 }
 
-export const SlideshowThumbnail = forwardRef<
-  HTMLImageElement,
-  SlideImageThumbnailComponentOptions
->(
-  (
-    {
-      thumbnail: {
+export const SlideshowThumbnail = forwardRef<HTMLImageElement, SlideOptions>(
+  ({ thumbnail, active }, _) => {
+    const [showFullQuality, setShowFullQuality] = useState(false);
+    const onLoad = useCallback(() => setShowFullQuality(true), []);
+
+    if (thumbnail) {
+      const {
         className,
         containerId,
         imgProps,
@@ -26,43 +27,39 @@ export const SlideshowThumbnail = forwardRef<
         onThumbnailClick,
         src,
         ref,
-      },
-      active,
-    },
-    _
-  ) => {
-    const [showFullQuality, setShowFullQuality] = useState(false);
-    const onLoad = useCallback(() => setShowFullQuality(true), []);
-
-    return (
-      <div
-        className={clsx(className, classes?.container, {
-          hide: !active,
-          active,
-        })}
-        onClick={onThumbnailClick}
-        data-testid={SLIDE_THUMBNAIL_TEST_ID}
-        id={containerId}
-      >
-        {blurImgProps && (
+      } = thumbnail;
+      return (
+        <div
+          className={clsx(className, classes?.container, {
+            hide: !active,
+            active,
+          })}
+          onClick={onThumbnailClick}
+          data-testid={SLIDE_THUMBNAIL_TEST_ID}
+          id={containerId}
+        >
+          {blurImgProps && (
+            <img
+              className={clsx(blurImgProps?.className, classes?.blurImg, {
+                hide: showFullQuality,
+              })}
+              {...blurImgProps}
+              loading={"eager"}
+            />
+          )}
           <img
-            className={clsx(blurImgProps?.className, classes?.blurImg, {
-              hide: showFullQuality,
-            })}
-            {...blurImgProps}
-            loading={"eager"}
+            ref={ref}
+            className={clsx(classes?.mainImg)}
+            {...imgProps}
+            {...{ [DATA_SRC_ATTR]: src }}
+            // src={dataSrc}
+            // loading={active ? "eager" : loading ?? "lazy"}
+            onLoad={onLoad}
           />
-        )}
-        <img
-          ref={ref}
-          className={clsx(classes?.mainImg)}
-          {...imgProps}
-          {...{ [DATA_SRC_ATTR]: src }}
-          // src={dataSrc}
-          // loading={active ? "eager" : loading ?? "lazy"}
-          onLoad={onLoad}
-        />
-      </div>
-    );
+        </div>
+      );
+    }
+
+    return null;
   }
 );

@@ -19,13 +19,10 @@ const getSlidesSelectionObserver =
   (slideshowState: SlideshowState): IntersectionObserverCallback =>
   (entries) => {
     entries.forEach((entry) => {
-      if (
-        entry.intersectionRatio >= 0.5 &&
-        entry.target instanceof HTMLImageElement
-      ) {
-        if (!entry.target.src) loadImage(entry.target as HTMLImageElement);
+      if (entry.intersectionRatio >= 0.5) {
+        if (entry.target instanceof HTMLImageElement && !entry.target.src)
+          loadImage(entry.target as HTMLImageElement);
         const index = entry.target.getAttribute(DATA_IDX_ATTR);
-        console.log(index);
         if (index) slideshowState.activeSlideIdx = parseInt(index);
       }
     });
@@ -79,6 +76,11 @@ export const useScrollSetup = (
         slideshowState.manualScrollingSlides = false;
         setActiveSlideIdx(slideshowState.activeSlideIdx);
         if (thumbnailsRef.current[slideshowState.activeSlideIdx]) {
+          console.log(
+            "unset",
+            slideshowState.activeSlideIdx,
+            thumbnailsRef.current[slideshowState.activeSlideIdx]
+          );
           const targetThumbnail =
             thumbnailsRef.current[slideshowState.activeSlideIdx].parentElement;
           targetThumbnail &&

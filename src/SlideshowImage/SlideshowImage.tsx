@@ -22,7 +22,7 @@ export const SlideshowImage = forwardRef<
         ref,
       },
     },
-    _
+    mainRef
   ) => {
     const [showFullQuality, setShowFullQuality] = useState(false);
     const onLoad = useCallback(() => setShowFullQuality(true), []);
@@ -46,7 +46,7 @@ export const SlideshowImage = forwardRef<
         )}
         <img
           className={clsx(classes?.mainImg)}
-          ref={ref}
+          ref={mainRef}
           onFocus={() => console.log("FOCUSED2", containerId)}
           {...{ [DATA_SRC_ATTR]: src, [DATA_IDX_ATTR]: dataIdx }}
           {...imgProps}

@@ -14,7 +14,21 @@
     max-height: 600px;
     overflow-x: auto;
     overflow-y: hidden;
+    display: flex;
+    align-items: center;
     scroll-snap-type: x mandatory;
+
+    .content-container {
+      height: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-basis: 100%;
+      flex-grow: 0;
+      flex-shrink: 0;
+      scroll-snap-align: center;
+      position: relative;
+    }
 
     .image-container {
       scroll-snap-align: center;

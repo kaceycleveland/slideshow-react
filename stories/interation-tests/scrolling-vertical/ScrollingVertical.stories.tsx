@@ -53,9 +53,7 @@ const ScrollingVerticalComponent = () => {
       >
         {slides.map((slide, idx) => {
           console.log(slide);
-          return (
-            "thumbnail" in slide && <SlideshowThumbnail key={idx} {...slide} />
-          );
+          return <SlideshowThumbnail key={idx} {...slide} />;
         })}
       </div>
     </div>
