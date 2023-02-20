@@ -1,9 +1,8 @@
+$breakpoint-mobile: 1350px;
+
 .basic-non-image-example-container {
   display: flex;
-
-  &:focus {
-    border: 2px solid red;
-  }
+  flex-direction: column;
 
   .scrolling-gallery-container {
     position: relative;
@@ -60,11 +59,9 @@
   .image-gallery-thumbnail-container {
     position: relative;
     display: flex;
-    flex-direction: column;
-    height: 600px;
     white-space: pre-wrap;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
+    overflow-x: auto;
     scroll-snap-type: x mandatory;
 
     .thumbnail-image-container {
@@ -98,6 +95,20 @@
           pointer-events: none;
         }
       }
+    }
+  }
+}
+
+@media (min-width: $breakpoint-mobile) {
+  .basic-non-image-example-container {
+    flex-direction: row;
+
+    .image-gallery-thumbnail-container {
+      flex-direction: column;
+      height: 600px;
+      white-space: pre-wrap;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
   }
 }
