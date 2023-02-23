@@ -2,7 +2,8 @@
   "name": "react-slideshow",
   "private": true,
   "version": "0.0.1",
-  "author": "kaceycleveland (kleveland.dev)",
+  "author": "Kacey Cleveland (https://kleveland.dev)",
+  "repository": "https://github.com/kaceycleveland/react-slideshow.git",
   "type": "module",
   "scripts": {
     "dev": "vite",

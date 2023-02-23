@@ -8,19 +8,17 @@ jobs:
     steps:
       # 👇 Version 2 of the action
       - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0 # 👈 Required to retrieve git history
+        uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: "16.x"
-          registry-url: https://registry.npmjs.org
+          registry-url: "https://registry.npmjs.org"
       - name: Install dependencies
         # 👇 Install dependencies with the same package manager used in the project (replace it as needed), e.g. yarn, npm, pnpm
-        run: yarn
+        run: yarn install --frozen-lockfile
       - name: Build
         run: yarn build
       - name: Publish package on NPM 📦
-        run: npm publish
+        run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
