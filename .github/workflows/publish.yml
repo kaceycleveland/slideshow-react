@@ -1,7 +1,6 @@
 name: Publish to NPM
 on:
-  release:
-    types: [created]
+  manual_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,9 +15,12 @@ jobs:
       - name: Install dependencies
         # 👇 Install dependencies with the same package manager used in the project (replace it as needed), e.g. yarn, npm, pnpm
         run: yarn install --frozen-lockfile
-      - name: Build
-        run: yarn build
-      - name: Publish package on NPM via yarn 📦
-        run: yarn publish --access public
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          # This expects you to have a script called release which does a build for your packages and calls changeset publish
+          publish: yarn release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

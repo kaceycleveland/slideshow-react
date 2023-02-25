@@ -12,14 +12,13 @@
     "build": "tsc --project tsconfig.build.json && vite build",
     "preview": "vite preview",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "release": "yarn build && yarn changeset publish"
   },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.20.12",
+    "@changesets/cli": "^2.26.0",
     "@storybook/addon-actions": "^6.5.16",
     "@storybook/addon-essentials": "^6.5.16",
     "@storybook/addon-interactions": "^6.5.16",
@@ -44,9 +43,8 @@
     "vite-plugin-dts": "^1.7.1"
   },
   "peerDependencies": {
-    "react": "^16.8.0 || 17.x",
-    "react-dom": "^16.8.0 || 17.x",
-    "styled-components": "^5.0.0"
+    "react": "^16.8.0 || 17.x || ^18.0.0",
+    "react-dom": "^16.8.0 || 17.x || ^18.0.0"
   },
   "files": [
     "dist"
