@@ -12,11 +12,12 @@
     "build": "tsc --project tsconfig.build.json && vite build",
     "preview": "vite preview",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
     "release": "yarn build && yarn changeset publish"
   },
   "dependencies": {},
   "devDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "@babel/core": "^7.20.12",
     "@changesets/cli": "^2.26.0",
     "@storybook/addon-actions": "^6.5.16",
