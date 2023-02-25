@@ -12,7 +12,10 @@
     "build": "tsc --project tsconfig.build.json && vite build",
     "preview": "vite preview",
     "storybook": "start-storybook -p 6006",
-    "release": "yarn build && yarn changeset publish --access public"
+    "release": "yarn build && yarn changeset publish"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {},
   "devDependencies": {
