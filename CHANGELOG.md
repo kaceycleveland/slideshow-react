@@ -1,5 +1,11 @@
 # kc-carousel
 
+## 0.0.5
+
+### Patch Changes
+
+- e7b630c: Change README encoding
+
 ## 0.0.4
 
 ### Patch Changes
