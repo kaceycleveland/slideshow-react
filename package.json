@@ -1,10 +1,10 @@
 {
-  "name": "kc-carousel",
+  "name": "slideshow-react",
   "version": "0.0.3",
   "author": "Kacey Cleveland (https://kleveland.dev)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kaceycleveland/kc-carousel.git"
+    "url": "git+https://github.com/kaceycleveland/slideshow-react.git"
   },
   "type": "module",
   "scripts": {
