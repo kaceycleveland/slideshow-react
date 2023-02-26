@@ -1,5 +1,11 @@
 # kc-carousel
 
+## 0.0.4
+
+### Patch Changes
+
+- 45354c9: Renamed to slideshow-react
+
 ## 0.0.3
 
 ### Patch Changes
