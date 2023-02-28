@@ -27,12 +27,9 @@ jobs:
         with:
           # 👇 Chromatic projectToken, refer to the manage page to obtain it.
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-      - name: Start Storybook
-        if: github.ref == 'refs/heads/main'
-        run: yarn storybook
       - name: Test Storybook
         if: github.ref == 'refs/heads/main'
-        run: yarn test-storybook --coverage
+        run: yarn test-storybook --no-index-json --url https://main--63dc6385f62009b5201ebeae.chromatic.com --coverage
       - name: Upload coverage reports to Codecov
         if: github.ref == 'refs/heads/main'
         uses: codecov/codecov-action@v3
