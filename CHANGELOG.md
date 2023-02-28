@@ -1,5 +1,11 @@
 # kc-carousel
 
+## 0.0.6
+
+### Patch Changes
+
+- 453c157: Added additional information in the README
+
 ## 0.0.5
 
 ### Patch Changes
