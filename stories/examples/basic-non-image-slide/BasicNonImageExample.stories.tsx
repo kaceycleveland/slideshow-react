@@ -42,19 +42,12 @@ const SlideshowComponent = forwardRef<
 });
 
 export const BasicNonImageExample = () => {
-  const {
-    rootThumbnailContainerRef,
-    rootSlidesContainerRef,
-    slides,
-    active,
-    index,
-    setSlideIdx,
-    slideshowState,
-  } = useSlideshow(addedDivSlide, {
-    getBlurSrc,
-    getThumbnailBlurSrc: getBlurSrc,
-    isScrolling: true,
-  });
+  const { rootThumbnailContainerRef, rootSlidesContainerRef, slides } =
+    useSlideshow(addedDivSlide, {
+      getBlurSrc,
+      getThumbnailBlurSrc: getBlurSrc,
+      isScrolling: true,
+    });
 
   return (
     <div className="basic-non-image-example-container">

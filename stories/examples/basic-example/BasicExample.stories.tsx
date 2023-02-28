@@ -1,13 +1,11 @@
 import "./BasicExample.scss";
 import {
   ImageMetadata,
-  SlideOptions,
   useSlideshow,
   SlideshowImage,
   SlideshowThumbnail,
 } from "../../../src/main";
 import { DefaultSlides } from "../../shared";
-import type { ComponentStoryObj } from "@storybook/react";
 import {
   SLIDE_IMAGE_CONTAINER_TEST_ID,
   SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID,
@@ -18,19 +16,12 @@ const getBlurSrc = (imageMetadata: ImageMetadata) => {
 };
 
 export const BasicSlideshow = () => {
-  const {
-    rootThumbnailContainerRef,
-    rootSlidesContainerRef,
-    slides,
-    active,
-    index,
-    setSlideIdx,
-    slideshowState,
-  } = useSlideshow(DefaultSlides, {
-    getBlurSrc,
-    getThumbnailBlurSrc: getBlurSrc,
-    isScrolling: true,
-  });
+  const { rootThumbnailContainerRef, rootSlidesContainerRef, slides } =
+    useSlideshow(DefaultSlides, {
+      getBlurSrc,
+      getThumbnailBlurSrc: getBlurSrc,
+      isScrolling: true,
+    });
 
   return (
     <div className="basic-example-container">

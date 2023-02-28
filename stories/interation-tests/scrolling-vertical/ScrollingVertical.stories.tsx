@@ -1,7 +1,6 @@
 import "./ScrollingVertical.scss";
 import {
   ImageMetadata,
-  SlideOptions,
   useSlideshow,
   SlideshowImage,
   SlideshowThumbnail,
@@ -18,19 +17,12 @@ const getBlurSrc = (imageMetadata: ImageMetadata) => {
 };
 
 const ScrollingVerticalComponent = () => {
-  const {
-    rootThumbnailContainerRef,
-    rootSlidesContainerRef,
-    slides,
-    active,
-    index,
-    setSlideIdx,
-    slideshowState,
-  } = useSlideshow(DefaultSlides, {
-    getBlurSrc,
-    getThumbnailBlurSrc: getBlurSrc,
-    isScrolling: true,
-  });
+  const { rootThumbnailContainerRef, rootSlidesContainerRef, slides } =
+    useSlideshow(DefaultSlides, {
+      getBlurSrc,
+      getThumbnailBlurSrc: getBlurSrc,
+      isScrolling: true,
+    });
 
   return (
     <div className="scrolling-vertical-container">

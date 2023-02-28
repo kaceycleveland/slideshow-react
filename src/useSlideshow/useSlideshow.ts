@@ -18,6 +18,9 @@ export interface SlideshowState {
   activeSlideIdx: number;
 }
 
+/**
+ * See more documentation at [Github Documentation](https://github.com/kaceycleveland/slideshow-react)
+ */
 export const useSlideshow = (
   slideOptions: SlideOptions[],
   passedOptions?: SlideshowOptions
@@ -210,14 +213,33 @@ export const useSlideshow = (
   }, [setNextSlideIdxFocus, rootSlidesContainerRef, rootThumbnailContainerRef]);
 
   return {
+    /**
+     * Derived slides from the given passed options and the original slides array.
+     */
     slides: activeSlides,
     rootSlidesContainerRef: rootSlidesContainerRef,
     rootThumbnailContainerRef: rootThumbnailContainerRef,
     thumbnailRefs,
+    /**
+     * Current active slide object.
+     */
     active: activeSlide,
+    /**
+     * Current active slide index.
+     */
     index: activeSlideIdx,
+    /**
+     * Set the active slide to the given index.
+     * Index setting is bound to the length of the slides array.
+     */
     setSlideIdx,
+    /**
+     * Sets the active slide to the next slide given by options?.nextImageIdxFn
+     */
     goNextSlide,
+    /**
+     * Sets the active slide to the previous slide given by options?.previousImageIdxFn
+     */
     goPreviousSlide,
   };
 };

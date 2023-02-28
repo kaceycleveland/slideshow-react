@@ -1,7 +1,6 @@
 import "./DefaultSlideshow.scss";
 import {
   ImageMetadata,
-  SlideOptions,
   useSlideshow,
   SlideshowImage,
   SlideshowThumbnail,
@@ -19,18 +18,11 @@ const getBlurSrc = (imageMetadata: ImageMetadata) => {
 };
 
 const DefaultSlideshowComponent = () => {
-  const {
-    rootThumbnailContainerRef,
-    rootSlidesContainerRef,
-    slides,
-    active,
-    index,
-    setSlideIdx,
-    slideshowState,
-  } = useSlideshow(DefaultSlides, {
-    getBlurSrc,
-    getThumbnailBlurSrc: getBlurSrc,
-  });
+  const { rootThumbnailContainerRef, rootSlidesContainerRef, slides } =
+    useSlideshow(DefaultSlides, {
+      getBlurSrc,
+      getThumbnailBlurSrc: getBlurSrc,
+    });
 
   return (
     <div className="default-container">
