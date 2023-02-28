@@ -2,7 +2,6 @@ import { MutableRefObject, RefObject, useEffect } from "react";
 import debounce from "../utils/debounce";
 import { performScroll, ScrollAlignment } from "../utils/performScroll";
 import { DATA_IDX_ATTR } from "./Constants";
-import { SlideshowOptions } from "./SlideshowOptions";
 import { SlideshowState } from "./useSlideshow";
 import { loadImage } from "./utils/loadImage";
 
@@ -76,11 +75,6 @@ export const useScrollSetup = (
         slideshowState.manualScrollingSlides = false;
         setActiveSlideIdx(slideshowState.activeSlideIdx);
         if (thumbnailsRef.current[slideshowState.activeSlideIdx]) {
-          console.log(
-            "unset",
-            slideshowState.activeSlideIdx,
-            thumbnailsRef.current[slideshowState.activeSlideIdx]
-          );
           const targetThumbnail =
             thumbnailsRef.current[slideshowState.activeSlideIdx].parentElement;
           targetThumbnail &&
@@ -93,25 +87,19 @@ export const useScrollSetup = (
         }
       };
 
-      slidesContainerRef.current.onmousedown = () => {
-        console.log("mouse down");
-        setScrollingTarget();
-      };
-      slidesContainerRef.current.ontouchstart = () => {
-        console.log("touch start");
-        setScrollingTarget();
-      };
+      slidesContainerRef.current.onmousedown = setScrollingTarget;
+      slidesContainerRef.current.ontouchstart = setScrollingTarget;
 
-      slidesContainerRef.current.onmouseup = debounce(() => {
-        console.log("mouseup");
-        unsetScrollingTarget();
-      }, 100);
-      slidesContainerRef.current.ontouchend = debounce(() => {
-        console.log("calling touchend");
-        unsetScrollingTarget();
-      }, 500);
+      slidesContainerRef.current.onmouseup = debounce(
+        unsetScrollingTarget,
+        100
+      );
+      slidesContainerRef.current.ontouchend = debounce(
+        unsetScrollingTarget,
+        500
+      );
     }
-  }, [slidesContainerRef, setActiveSlideIdx, scrollAlignment]);
+  }, [enabled, slidesContainerRef, setActiveSlideIdx, scrollAlignment]);
 
   useEffect(() => {
     if (enabled && thumbnailsContainerRef.current) {
@@ -123,23 +111,14 @@ export const useScrollSetup = (
         slideshowState.manualScrollingThumbnails = false;
       };
 
-      thumbnailsContainerRef.current.onmousedown = () => {
-        console.log("mouse down thumbnails");
-        setScrollingTarget();
-      };
-      thumbnailsContainerRef.current.ontouchstart = () => {
-        console.log("touch start thumbnails");
-        setScrollingTarget();
-      };
+      thumbnailsContainerRef.current.onmousedown = setScrollingTarget;
+      thumbnailsContainerRef.current.ontouchstart = setScrollingTarget;
 
-      thumbnailsContainerRef.current.onmouseup = () => {
-        console.log("mouseup thumbnails");
-        unsetScrollingTarget();
-      };
-      thumbnailsContainerRef.current.ontouchend = debounce(() => {
-        console.log("calling touchend thumbnails");
-        unsetScrollingTarget();
-      }, 1200);
+      thumbnailsContainerRef.current.onmouseup = unsetScrollingTarget;
+      thumbnailsContainerRef.current.ontouchend = debounce(
+        unsetScrollingTarget,
+        1200
+      );
     }
-  }, [thumbnailsContainerRef]);
+  }, [enabled, thumbnailsContainerRef]);
 };

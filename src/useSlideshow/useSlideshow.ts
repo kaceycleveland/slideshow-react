@@ -171,8 +171,19 @@ export const useSlideshow = (
     [activeSlides, activeSlideIdx]
   );
 
-  useEffect(() => {
-    const setNextSlideIdx = (e: KeyboardEvent) => {
+  const goNextSlide = useCallback(
+    () => setSlideIdx(options?.nextImageIdxFn(activeSlides, activeSlideIdx)),
+    [activeSlides, activeSlideIdx]
+  );
+
+  const goPreviousSlide = useCallback(
+    () =>
+      setSlideIdx(options?.previousImageIdxFn(activeSlides, activeSlideIdx)),
+    [activeSlides, activeSlideIdx]
+  );
+
+  const setNextSlideIdxFocus = useCallback(
+    (e: KeyboardEvent) => {
       if (document.activeElement === e.target) {
         if (e.code === LEFT_KEY) {
           e.preventDefault();
@@ -183,30 +194,30 @@ export const useSlideshow = (
           setSlideIdx(activeSlideIdx + 1);
         }
       }
-    };
+    },
+    [setSlideIdx, activeSlideIdx]
+  );
+
+  useEffect(() => {
     if (rootThumbnailContainerRef.current) {
       rootThumbnailContainerRef.current.tabIndex = 0;
-      rootThumbnailContainerRef.current.onkeydown = setNextSlideIdx;
+      rootThumbnailContainerRef.current.onkeydown = setNextSlideIdxFocus;
     }
     if (rootSlidesContainerRef.current) {
       rootSlidesContainerRef.current.tabIndex = 0;
-      rootSlidesContainerRef.current.onkeydown = setNextSlideIdx;
+      rootSlidesContainerRef.current.onkeydown = setNextSlideIdxFocus;
     }
-  }, [
-    rootSlidesContainerRef,
-    rootThumbnailContainerRef,
-    setSlideIdx,
-    activeSlideIdx,
-  ]);
+  }, [setNextSlideIdxFocus, rootSlidesContainerRef, rootThumbnailContainerRef]);
 
   return {
     slides: activeSlides,
-    slideshowState,
     rootSlidesContainerRef: rootSlidesContainerRef,
     rootThumbnailContainerRef: rootThumbnailContainerRef,
     thumbnailRefs,
     active: activeSlide,
     index: activeSlideIdx,
     setSlideIdx,
+    goNextSlide,
+    goPreviousSlide,
   };
 };
