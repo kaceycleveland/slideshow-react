@@ -2,6 +2,7 @@
 
 ![npm version](https://4.vercel.app/npm/version/slideshow-react?)
 ![npm downloads](https://4.vercel.app/npm/downloadmonth/slideshow-react?)
+[![codecov](https://codecov.io/gh/kaceycleveland/slideshow-react/branch/main/graph/badge.svg?token=RF3OOAW9HF)](https://codecov.io/gh/kaceycleveland/slideshow-react)
 
 # Slideshow React
 
