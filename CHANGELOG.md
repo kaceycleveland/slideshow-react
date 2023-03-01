@@ -1,5 +1,11 @@
 # kc-carousel
 
+## 0.0.7
+
+### Patch Changes
+
+- 4872ea1: Added inline TypeScript documentation for most current options
+
 ## 0.0.6
 
 ### Patch Changes
