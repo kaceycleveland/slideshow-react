@@ -11,7 +11,6 @@ import { DEFAULT_SLIDESHOW_OPTIONS } from "./utils/defaultSlideshowOptions";
 import { useScrollSetup } from "./useScrollSetup";
 import { performScroll } from "../utils/performScroll";
 import { LEFT_KEY, RIGHT_KEY } from "./Constants";
-import useMap from "../utils/useMap";
 
 export interface SlideshowState {
   manualScrollingSlides: boolean;
