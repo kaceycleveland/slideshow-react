@@ -8,6 +8,7 @@ module.exports = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
+    // Comment out instanbul to get accurate source maps
     {
       name: "@storybook/addon-coverage",
       options: {

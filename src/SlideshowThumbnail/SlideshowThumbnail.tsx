@@ -1,11 +1,7 @@
-import {
-  SlideImageComponentOptions,
-  SlideOptions,
-  ThumbnailMetadata,
-} from "../useSlideshow";
+import { SlideOptions, ThumbnailMetadata } from "../useSlideshow";
 import clsx from "clsx";
 import { forwardRef, useCallback, useState } from "react";
-import { DATA_SRC_ATTR } from "../useSlideshow/Constants";
+import { DATA_IDX_ATTR } from "../useSlideshow/Constants";
 import { SLIDE_THUMBNAIL_TEST_ID } from "../TestConstants";
 
 export interface SlideshowThumbnailAddedProps extends ThumbnailMetadata {
@@ -13,7 +9,7 @@ export interface SlideshowThumbnailAddedProps extends ThumbnailMetadata {
 }
 
 export const SlideshowThumbnail = forwardRef<HTMLImageElement, SlideOptions>(
-  ({ thumbnail, active }, _) => {
+  ({ thumbnail, active, dataIdx }, _) => {
     const [showFullQuality, setShowFullQuality] = useState(false);
     const onLoad = useCallback(() => setShowFullQuality(true), []);
 
@@ -25,6 +21,7 @@ export const SlideshowThumbnail = forwardRef<HTMLImageElement, SlideOptions>(
         classes,
         blurImgProps,
         onThumbnailClick,
+        loaded,
         src,
         ref,
       } = thumbnail;
@@ -51,7 +48,8 @@ export const SlideshowThumbnail = forwardRef<HTMLImageElement, SlideOptions>(
             ref={ref}
             className={clsx(classes?.mainImg)}
             {...imgProps}
-            {...{ [DATA_SRC_ATTR]: src }}
+            {...{ [DATA_IDX_ATTR]: dataIdx }}
+            src={loaded ? src : undefined}
             // src={dataSrc}
             // loading={active ? "eager" : loading ?? "lazy"}
             onLoad={onLoad}

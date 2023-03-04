@@ -1,7 +1,7 @@
 import { SlideImageComponentOptions } from "../useSlideshow";
 import clsx from "clsx";
 import { forwardRef, useCallback, useState } from "react";
-import { DATA_IDX_ATTR, DATA_SRC_ATTR } from "../useSlideshow/Constants";
+import { DATA_IDX_ATTR } from "../useSlideshow/Constants";
 import { SLIDE_TEST_ID } from "../TestConstants";
 
 export const SlideshowImage = forwardRef<
@@ -12,6 +12,7 @@ export const SlideshowImage = forwardRef<
     {
       active,
       dataIdx,
+      loaded,
       main: {
         className,
         blurImgProps,
@@ -48,7 +49,8 @@ export const SlideshowImage = forwardRef<
           className={clsx(classes?.mainImg)}
           ref={mainRef}
           onFocus={() => console.log("FOCUSED2", containerId)}
-          {...{ [DATA_SRC_ATTR]: src, [DATA_IDX_ATTR]: dataIdx }}
+          {...{ [DATA_IDX_ATTR]: dataIdx }}
+          src={loaded ? src : undefined}
           {...imgProps}
           // loading={active ? "eager" : loading ?? "lazy"}
           onLoad={onLoad}

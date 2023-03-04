@@ -1,34 +1,62 @@
-import { MutableRefObject, RefObject, useEffect } from "react";
+import {
+  Dispatch,
+  MutableRefObject,
+  RefObject,
+  SetStateAction,
+  useEffect,
+} from "react";
 import debounce from "../utils/debounce";
 import { performScroll, ScrollAlignment } from "../utils/performScroll";
 import { DATA_IDX_ATTR } from "./Constants";
+import { SlideOptions } from "./SlideOptions";
 import { SlideshowState } from "./useSlideshow";
-import { loadImage } from "./utils/loadImage";
+const getThumbnailObserver =
+  (
+    setLoadedThumbnailMap: Dispatch<SetStateAction<boolean[]>>
+  ): IntersectionObserverCallback =>
+  (entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.intersectionRatio >= 0.5) {
+        const index = entry.target.getAttribute(DATA_IDX_ATTR);
+        if (index) {
+          const numIndex = parseInt(index);
+          setLoadedThumbnailMap((prev) => {
+            if (prev[numIndex]) return prev;
+            prev[numIndex] = true;
+            return [...prev];
+          });
+          observer.unobserve(entry.target);
+        }
+      }
+    });
+  };
 
-const onIntersection: IntersectionObserverCallback = (entries, observer) => {
-  entries.forEach((entry) => {
-    if (entry.intersectionRatio >= 0.5) {
-      observer.unobserve(entry.target);
-      loadImage(entry.target as HTMLImageElement);
-    }
-  });
-};
-
-const getSlidesSelectionObserver =
-  (slideshowState: SlideshowState): IntersectionObserverCallback =>
+const getSlideObserver =
+  (
+    setLoadedSlideMap: Dispatch<SetStateAction<boolean[]>>,
+    slideshowState: SlideshowState
+  ): IntersectionObserverCallback =>
   (entries) => {
     entries.forEach((entry) => {
       if (entry.intersectionRatio >= 0.5) {
-        if (entry.target instanceof HTMLImageElement && !entry.target.src)
-          loadImage(entry.target as HTMLImageElement);
         const index = entry.target.getAttribute(DATA_IDX_ATTR);
-        if (index) slideshowState.activeSlideIdx = parseInt(index);
+        if (index) {
+          const numIndex = parseInt(index);
+          setLoadedSlideMap((prev) => {
+            if (prev[numIndex]) return prev;
+            prev[numIndex] = true;
+            return [...prev];
+          });
+          slideshowState.activeSlideIdx = numIndex;
+        }
       }
     });
   };
 
 export const useScrollSetup = (
   length: number,
+  setLoadedThumbnailMap: Dispatch<SetStateAction<boolean[]>>,
+  setLoadedSlideMap: Dispatch<SetStateAction<boolean[]>>,
   setActiveSlideIdx: (idx: number) => void,
   slideshowState: SlideshowState,
   slidesRef: MutableRefObject<HTMLImageElement[]>,
@@ -41,11 +69,14 @@ export const useScrollSetup = (
   useEffect(() => {
     thumbnailsRef.current = thumbnailsRef.current.slice(0, length);
     // Load thumbnails on intersection
-    const observer = new IntersectionObserver(onIntersection, {
-      root: thumbnailsContainerRef.current,
-      rootMargin: "0px",
-      threshold: 0.5,
-    });
+    const observer = new IntersectionObserver(
+      getThumbnailObserver(setLoadedThumbnailMap),
+      {
+        root: thumbnailsContainerRef.current,
+        rootMargin: "0px",
+        threshold: 0.5,
+      }
+    );
     thumbnailsRef.current.forEach((thumbnail) => observer.observe(thumbnail));
   }, [length, thumbnailsRef.current, thumbnailsContainerRef.current]);
 
@@ -54,7 +85,7 @@ export const useScrollSetup = (
       slidesRef.current = slidesRef.current.slice(0, length);
       // Load slides on intersection and set slides index
       const observer = new IntersectionObserver(
-        getSlidesSelectionObserver(slideshowState),
+        getSlideObserver(setLoadedSlideMap, slideshowState),
         {
           root: slidesContainerRef.current,
           rootMargin: "0px",

@@ -11,6 +11,7 @@ import { DEFAULT_SLIDESHOW_OPTIONS } from "./utils/defaultSlideshowOptions";
 import { useScrollSetup } from "./useScrollSetup";
 import { performScroll } from "../utils/performScroll";
 import { LEFT_KEY, RIGHT_KEY } from "./Constants";
+import useMap from "../utils/useMap";
 
 export interface SlideshowState {
   manualScrollingSlides: boolean;
@@ -52,6 +53,8 @@ export const useSlideshow = (
   const [activeSlideIdx, setActiveSlideIdx] = useState(
     options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex
   );
+  const [loadedThumbnailMap, setLoadedThumbnailMap] = useState<boolean[]>([]);
+  const [loadedSlideMap, setLoadedSlideMap] = useState<boolean[]>([]);
 
   const setSlideIdx = useCallback(
     async (idx: number) => {
@@ -89,7 +92,6 @@ export const useSlideshow = (
       setActiveSlideIdx,
       activeSlideIdx,
       slideshowState,
-      slidesRef,
     ]
   );
 
@@ -98,6 +100,8 @@ export const useSlideshow = (
       (slideOption, slideIndex) => {
         const base: SlideOptions = { ...slideOption };
         base.dataIdx = slideIndex;
+
+        base.loaded = loadedSlideMap[slideIndex];
         if ("main" in base) {
           // Generate and assign blur images to each slide if not defined
           assignBlurSrc(base.main, options?.getBlurSrc);
@@ -111,6 +115,7 @@ export const useSlideshow = (
         };
 
         if ("thumbnail" in base && base.thumbnail) {
+          base.thumbnail.loaded = loadedThumbnailMap[slideIndex];
           assignBlurSrc(base.thumbnail, options?.getThumbnailBlurSrc);
           assignDefaultClasses(
             base.thumbnail,
@@ -127,7 +132,15 @@ export const useSlideshow = (
     );
 
     return assignedSlides;
-  }, [slideOptions, setSlideIdx, thumbnailRefs, options]);
+  }, [
+    slideOptions,
+    setSlideIdx,
+    slidesRef,
+    thumbnailRefs,
+    options,
+    loadedSlideMap,
+    loadedThumbnailMap,
+  ]);
 
   const activeSlides: SlideOptions[] = useMemo(() => {
     assignPreloadingDepth(
@@ -159,6 +172,8 @@ export const useSlideshow = (
 
   useScrollSetup(
     activeSlides.length,
+    setLoadedThumbnailMap,
+    setLoadedSlideMap,
     setActiveSlideIdx,
     slideshowState,
     slidesRef,

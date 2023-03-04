@@ -17,6 +17,7 @@ export interface ImageMetadata {
 
 export interface ThumbnailMetadata extends ImageMetadata {
   onThumbnailClick?: () => void;
+  loaded?: boolean;
 }
 
 export interface RequiredImageProps {
@@ -28,6 +29,7 @@ export interface SharedComponentOptions {
   active?: boolean;
   ref?: Ref<any>;
   thumbnail?: ThumbnailMetadata;
+  loaded?: boolean;
 }
 
 export interface SlideImageComponentOptions extends SharedComponentOptions {
