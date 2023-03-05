@@ -12,7 +12,7 @@ import {
 } from "../../../src/TestConstants";
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
-  return imageMetadata.src + ",bl-12";
+  return imageMetadata.imgProps.src + ",bl-12";
 };
 
 export const BasicSlideshow = () => {

@@ -3,16 +3,14 @@ import { ImageComponentProps } from "../ImageComponentProps";
 
 export interface ImageMetadata {
   className?: string;
-  src: string;
   classes?: {
     container?: string;
     blurImg?: string;
     mainImg?: string;
   };
   blurImgProps?: ImageComponentProps;
-  imgProps?: ImageComponentProps;
+  imgProps: ImageComponentProps;
   containerId?: string;
-  ref?: Ref<HTMLImageElement>;
 }
 
 export interface ThumbnailMetadata extends ImageMetadata {

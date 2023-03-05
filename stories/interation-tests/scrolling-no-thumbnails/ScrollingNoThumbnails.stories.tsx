@@ -6,7 +6,7 @@ import { SLIDE_IMAGE_CONTAINER_TEST_ID } from "../../../src/TestConstants";
 import { basicNoThumbnailTest } from "../../shared/tests";
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
-  return imageMetadata.src + ",bl-12";
+  return imageMetadata.imgProps.src + ",bl-12";
 };
 
 const ScrollingNoThumbnailsComponent = () => {

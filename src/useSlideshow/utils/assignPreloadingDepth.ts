@@ -1,6 +1,5 @@
 import { SlideOptions } from "../SlideOptions";
 import { NavigateImageFn } from "../SlideshowOptions";
-import { assignSrc } from "./assignSrc";
 
 export const assignPreloadingDepth = (
   slideOptions: SlideOptions[],
@@ -13,19 +12,19 @@ export const assignPreloadingDepth = (
   let prevTrack = activeIdx;
   const activeSlide = slideOptions[activeIdx];
   if ("main" in activeSlide) {
-    assignSrc(activeSlide.main);
+    activeSlide.loaded = true;
     for (let i = 0; i < preloadDepth; i++) {
       const nextImageIdx = nextImageIdxFn(slideOptions, nextTrack);
       const prevImageIdx = prevImageIdxFn(slideOptions, prevTrack);
       if (nextImageIdx) {
         nextTrack = nextImageIdx;
         const nextSlide = slideOptions[nextTrack];
-        "main" in nextSlide && assignSrc(nextSlide.main);
+        if ("main" in nextSlide) nextSlide.loaded = true;
       }
       if (prevImageIdx) {
         prevTrack = prevImageIdx;
         const prevSlide = slideOptions[prevTrack];
-        "main" in prevSlide && assignSrc(prevSlide.main);
+        if ("main" in prevSlide) prevSlide.loaded = true;
       }
     }
   }

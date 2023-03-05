@@ -29,6 +29,7 @@ export const useSlideshow = (
   const rootThumbnailContainerRef = useRef<HTMLDivElement>(null);
   const slidesRef = useRef<HTMLImageElement[]>([]);
   const thumbnailRefs = useRef<HTMLImageElement[]>([]);
+
   const options = useMemo(
     () => ({
       ...DEFAULT_SLIDESHOW_OPTIONS,
@@ -121,9 +122,11 @@ export const useSlideshow = (
             options?.defaultThumbnailClasses
           );
           assignThumbnailClick(base.thumbnail, slideIndex, setSlideIdx);
-          base.thumbnail.ref = (el) => {
-            if (el) thumbnailRefs.current[slideIndex] = el;
-          };
+          if (base.thumbnail.imgProps) {
+            base.thumbnail.imgProps.ref = (el) => {
+              if (el) thumbnailRefs.current[slideIndex] = el;
+            };
+          }
         }
 
         return base;

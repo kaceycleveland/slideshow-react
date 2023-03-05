@@ -59,7 +59,8 @@ $breakpoint-tablet: 1350px;
 
       .main-image {
         width: 100%;
-        height: auto;
+        height: 500px;
+        object-fit: cover;
       }
     }
   }
@@ -73,6 +74,16 @@ $breakpoint-tablet: 1350px;
   .basic-non-image-example-container {
     max-width: 600px;
     width: unset;
+
+    .scrolling-gallery-container {
+      .image-container {
+        .main-image {
+          width: 600px;
+          height: 600px;
+          object-fit: unset;
+        }
+      }
+    }
 
     .image-gallery-thumbnail-container {
       position: relative;

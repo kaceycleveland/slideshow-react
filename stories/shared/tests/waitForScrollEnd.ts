@@ -8,7 +8,6 @@ export default function waitForScrollEnd(el: Element) {
       // We requestAnimationFrame either for 500 frames or until 20 frames with
       // no change have been observed.
       if (frames >= 500 || frames - last_changed_frame > 20) {
-        console.log("scroll end");
         resolve();
       } else {
         if (window.scrollX != last_x || window.scrollY != last_y) {

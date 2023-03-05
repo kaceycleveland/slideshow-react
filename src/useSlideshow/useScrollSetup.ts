@@ -8,8 +8,8 @@ import {
 import debounce from "../utils/debounce";
 import { performScroll, ScrollAlignment } from "../utils/performScroll";
 import { DATA_IDX_ATTR } from "./Constants";
-import { SlideOptions } from "./SlideOptions";
 import { SlideshowState } from "./useSlideshow";
+
 const getThumbnailObserver =
   (
     setLoadedThumbnailMap: Dispatch<SetStateAction<boolean[]>>

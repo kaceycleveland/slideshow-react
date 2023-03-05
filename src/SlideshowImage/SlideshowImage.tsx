@@ -13,18 +13,11 @@ export const SlideshowImage = forwardRef<
       active,
       dataIdx,
       loaded,
-      main: {
-        className,
-        blurImgProps,
-        classes,
-        imgProps,
-        containerId,
-        src,
-        ref,
-      },
+      main: { className, blurImgProps, classes, imgProps, containerId },
     },
     mainRef
   ) => {
+    const { src, srcSet, sizes, ...restImgProps } = imgProps;
     const [showFullQuality, setShowFullQuality] = useState(false);
     const onLoad = useCallback(() => setShowFullQuality(true), []);
     return (
@@ -48,10 +41,11 @@ export const SlideshowImage = forwardRef<
         <img
           className={clsx(classes?.mainImg)}
           ref={mainRef}
-          onFocus={() => console.log("FOCUSED2", containerId)}
           {...{ [DATA_IDX_ATTR]: dataIdx }}
           src={loaded ? src : undefined}
-          {...imgProps}
+          srcSet={loaded ? srcSet : undefined}
+          sizes={loaded ? sizes : undefined}
+          {...restImgProps}
           // loading={active ? "eager" : loading ?? "lazy"}
           onLoad={onLoad}
         />

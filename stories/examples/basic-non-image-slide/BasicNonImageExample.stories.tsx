@@ -18,14 +18,16 @@ const addedDivSlide: SlideOptions[] = [
   {
     component: <div className="test-component">TEST</div>,
     thumbnail: {
-      src: "https://ik.imagekit.io/z2cba9cyv/1.jpg?tr=w-200,h-200",
+      imgProps: {
+        src: "https://ik.imagekit.io/z2cba9cyv/1.jpg?tr=w-200,h-200",
+      },
     },
   },
   ...DefaultSlides,
 ];
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
-  return imageMetadata.src + ",bl-12";
+  return imageMetadata.imgProps.src + ",bl-12";
 };
 
 const SlideshowComponent = forwardRef<

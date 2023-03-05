@@ -22,9 +22,10 @@ export const SlideshowThumbnail = forwardRef<HTMLImageElement, SlideOptions>(
         blurImgProps,
         onThumbnailClick,
         loaded,
-        src,
-        ref,
       } = thumbnail;
+
+      const { src, srcSet, sizes, ref, ...restImgProps } = imgProps;
+
       return (
         <div
           className={clsx(className, classes?.container, {
@@ -47,9 +48,11 @@ export const SlideshowThumbnail = forwardRef<HTMLImageElement, SlideOptions>(
           <img
             ref={ref}
             className={clsx(classes?.mainImg)}
-            {...imgProps}
+            {...restImgProps}
             {...{ [DATA_IDX_ATTR]: dataIdx }}
             src={loaded ? src : undefined}
+            srcSet={loaded ? srcSet : undefined}
+            sizes={loaded ? sizes : undefined}
             // src={dataSrc}
             // loading={active ? "eager" : loading ?? "lazy"}
             onLoad={onLoad}

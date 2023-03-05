@@ -13,7 +13,7 @@ import {
 } from "../../../src/TestConstants";
 import { basicSlideshowTest } from "../../shared/tests";
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
-  return imageMetadata.src + ",bl-12";
+  return imageMetadata.imgProps.src + ",bl-12";
 };
 
 const ScrollingVerticalComponent = () => {
@@ -44,7 +44,6 @@ const ScrollingVerticalComponent = () => {
         data-testid={SLIDE_THUMBNAIL_IMAGE_CONTAINER_TEST_ID}
       >
         {slides.map((slide, idx) => {
-          console.log(slide);
           return <SlideshowThumbnail key={idx} {...slide} />;
         })}
       </div>
