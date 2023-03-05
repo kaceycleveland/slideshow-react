@@ -1,4 +1,4 @@
-# kc-carousel
+# slideshow-react
 
 ## 0.0.7
 
