@@ -1,5 +1,13 @@
 # slideshow-react
 
+## 0.0.8
+
+### Patch Changes
+
+- 1f02b35: Added typedoc for documentation and the support for deploying via GH actions
+- 3abb282: Initial work to support srcset and responsive image components better
+- bd8f408: Deprecate using data-src attribute and instead use react setState and passed props
+
 ## 0.0.7
 
 ### Patch Changes
