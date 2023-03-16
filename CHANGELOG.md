@@ -1,5 +1,11 @@
 # slideshow-react
 
+## 0.1.0
+
+### Minor Changes
+
+- 622dda3: Simplified useSlideshow to not have any thumbnail relation and implemented new options for `onSlideScrollStart` and `onSlideScrollEnd`
+
 ## 0.0.8
 
 ### Patch Changes
