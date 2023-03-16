@@ -57,15 +57,13 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/react-slideshow.umd.js",
-  "module": "./dist/react-slideshow.es.js",
+  "main": "./dist/slideshow-react.umd.js",
+  "module": "./dist/slideshow-react.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/react-slideshow.es.js",
-      "require": "./dist/react-slideshow.umd.js"
+      "import": "./dist/slideshow-react.es.js",
+      "require": "./dist/slideshow-react.umd.js"
     }
-  },
-  "readme": "ERROR: No README data found!",
-  "_id": "react-slideshow@0.0.0"
+  }
 }
