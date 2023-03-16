@@ -7,13 +7,13 @@ export default function waitForScrollEnd(el: Element) {
     function tick(frames: number) {
       // We requestAnimationFrame either for 500 frames or until 20 frames with
       // no change have been observed.
-      if (frames >= 500 || frames - last_changed_frame > 20) {
+      if (frames >= 500 || frames - last_changed_frame > 10) {
         resolve();
       } else {
-        if (window.scrollX != last_x || window.scrollY != last_y) {
+        if (el.scrollLeft != last_x || el.scrollTop != last_y) {
           last_changed_frame = frames;
-          last_x = window.scrollX;
-          last_y = window.scrollY;
+          last_x = el.scrollLeft;
+          last_y = el.scrollTop;
         }
         requestAnimationFrame(tick.bind(null, frames + 1));
       }

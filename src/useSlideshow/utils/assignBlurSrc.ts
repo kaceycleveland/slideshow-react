@@ -1,13 +1,13 @@
-import { ImageMetadata } from "../SlideOptions";
+import { SlideImageComponentOptions } from "../SlideOptions";
 import { SlideshowOptions } from "../SlideshowOptions";
 
 export const assignBlurSrc = (
-  imageData: ImageMetadata,
+  slideImage: SlideImageComponentOptions,
   getBlurSrc?: SlideshowOptions["getBlurSrc"]
 ) => {
-  if (!imageData.blurImgProps) imageData.blurImgProps = {};
-  const blurImg = imageData.blurImgProps;
+  if (!slideImage.blurImage) slideImage.blurImage = {};
+  const blurImg = slideImage.blurImage;
   if (getBlurSrc && !blurImg.src) {
-    blurImg.src = getBlurSrc(imageData);
+    blurImg.src = getBlurSrc(slideImage.image);
   }
 };

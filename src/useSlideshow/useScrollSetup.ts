@@ -3,42 +3,21 @@ import {
   MutableRefObject,
   RefObject,
   SetStateAction,
+  useCallback,
   useEffect,
 } from "react";
-import debounce from "../utils/debounce";
-import { performScroll, ScrollAlignment } from "../utils/performScroll";
+import waitForScrollEnd from "../utils/waitForScrollEnd";
 import { DATA_IDX_ATTR } from "./Constants";
+import { SlideshowOptions } from "./SlideshowOptions";
 import { SlideshowState } from "./useSlideshow";
-
-const getThumbnailObserver =
-  (
-    setLoadedThumbnailMap: Dispatch<SetStateAction<boolean[]>>
-  ): IntersectionObserverCallback =>
-  (entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.intersectionRatio >= 0.5) {
-        const index = entry.target.getAttribute(DATA_IDX_ATTR);
-        if (index) {
-          const numIndex = parseInt(index);
-          setLoadedThumbnailMap((prev) => {
-            if (prev[numIndex]) return prev;
-            prev[numIndex] = true;
-            return [...prev];
-          });
-          observer.unobserve(entry.target);
-        }
-      }
-    });
-  };
 
 const getSlideObserver =
   (
-    setLoadedSlideMap: Dispatch<SetStateAction<boolean[]>>,
-    slideshowState: SlideshowState
+    setLoadedSlideMap: Dispatch<SetStateAction<boolean[]>>
   ): IntersectionObserverCallback =>
   (entries) => {
     entries.forEach((entry) => {
-      if (entry.intersectionRatio >= 0.5) {
+      if (entry.intersectionRatio >= 0.3) {
         const index = entry.target.getAttribute(DATA_IDX_ATTR);
         if (index) {
           const numIndex = parseInt(index);
@@ -47,6 +26,19 @@ const getSlideObserver =
             prev[numIndex] = true;
             return [...prev];
           });
+        }
+      }
+    });
+  };
+
+const getSlideStateObserver =
+  (slideshowState: SlideshowState): IntersectionObserverCallback =>
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.intersectionRatio >= 0.95) {
+        const index = entry.target.getAttribute(DATA_IDX_ATTR);
+        if (index) {
+          const numIndex = parseInt(index);
           slideshowState.activeSlideIdx = numIndex;
         }
       }
@@ -55,101 +47,94 @@ const getSlideObserver =
 
 export const useScrollSetup = (
   length: number,
-  setLoadedThumbnailMap: Dispatch<SetStateAction<boolean[]>>,
   setLoadedSlideMap: Dispatch<SetStateAction<boolean[]>>,
-  setActiveSlideIdx: (idx: number) => void,
+  setSlideIdxInternal: (idx: number, shouldPerformScroll?: boolean) => void,
   slideshowState: SlideshowState,
   slidesRef: MutableRefObject<HTMLImageElement[]>,
   slidesContainerRef: RefObject<HTMLDivElement>,
-  thumbnailsRef: MutableRefObject<HTMLImageElement[]>,
-  thumbnailsContainerRef: RefObject<HTMLDivElement>,
-  scrollAlignment: ScrollAlignment,
+  options: SlideshowOptions,
   enabled?: boolean
 ) => {
-  useEffect(() => {
-    thumbnailsRef.current = thumbnailsRef.current.slice(0, length);
-    // Load thumbnails on intersection
-    const observer = new IntersectionObserver(
-      getThumbnailObserver(setLoadedThumbnailMap),
-      {
-        root: thumbnailsContainerRef.current,
-        rootMargin: "0px",
-        threshold: 0.5,
-      }
-    );
-    thumbnailsRef.current.forEach((thumbnail) => observer.observe(thumbnail));
-  }, [length, thumbnailsRef.current, thumbnailsContainerRef.current]);
-
   useEffect(() => {
     if (enabled) {
       slidesRef.current = slidesRef.current.slice(0, length);
       // Load slides on intersection and set slides index
-      const observer = new IntersectionObserver(
-        getSlideObserver(setLoadedSlideMap, slideshowState),
+      const slideLoaderObserver = new IntersectionObserver(
+        getSlideObserver(setLoadedSlideMap),
         {
           root: slidesContainerRef.current,
           rootMargin: "0px",
-          threshold: 0.5,
+          threshold: 0.3,
         }
       );
-      slidesRef.current.forEach((slide) => observer.observe(slide));
+
+      const slideStateObserver = new IntersectionObserver(
+        getSlideStateObserver(slideshowState),
+        {
+          root: slidesContainerRef.current,
+          rootMargin: "0px",
+          threshold: 0.95,
+        }
+      );
+
+      slidesRef.current.forEach((slide) => {
+        slideLoaderObserver.observe(slide);
+        slideStateObserver.observe(slide);
+      });
+
+      return () => {
+        slideLoaderObserver.disconnect();
+        slideStateObserver.disconnect();
+      };
     }
-  }, [enabled, length, slidesRef.current, slidesContainerRef.current]);
+  }, [enabled, length, slideshowState]);
+
+  const unsetScrollingTarget = useCallback(
+    (e?: MouseEvent | TouchEvent) => {
+      const prevActiveSlideIdx = slideshowState.activeSlideIdx;
+      slideshowState.prevActiveSlideIdx = slideshowState.activeSlideIdx;
+      slidesContainerRef.current &&
+        waitForScrollEnd(slidesContainerRef.current).then(() => {
+          if (prevActiveSlideIdx === slideshowState.prevActiveSlideIdx) {
+            slideshowState.isManualScrolling = false;
+            setSlideIdxInternal(slideshowState.activeSlideIdx);
+          }
+        });
+    },
+    [slideshowState, setSlideIdxInternal]
+  );
 
   useEffect(() => {
     if (enabled && slidesContainerRef.current) {
-      const setScrollingTarget = (e?: MouseEvent | TouchEvent) => {
-        slideshowState.manualScrollingSlides = true;
+      slidesContainerRef.current.onscroll = () => {
+        if (slideshowState.isManualScrolling && !slideshowState.isScrolling) {
+          options.onSlideScrollStart &&
+            options.onSlideScrollStart(slideshowState.activeSlideIdx);
+          slideshowState.isManualScrolling = false;
+        }
+
+        slideshowState.isScrolling = true;
       };
 
-      const unsetScrollingTarget = (e?: MouseEvent | TouchEvent) => {
-        slideshowState.manualScrollingSlides = false;
-        setActiveSlideIdx(slideshowState.activeSlideIdx);
-        if (thumbnailsRef.current[slideshowState.activeSlideIdx]) {
-          const targetThumbnail =
-            thumbnailsRef.current[slideshowState.activeSlideIdx].parentElement;
-          targetThumbnail &&
-            thumbnailsContainerRef.current &&
-            performScroll(
-              thumbnailsContainerRef.current,
-              targetThumbnail,
-              scrollAlignment
-            );
+      slidesContainerRef.current.onmousedown = () => {
+        slideshowState.isManualScrolling = true;
+      };
+
+      slidesContainerRef.current.ontouchstart = () => {
+        slideshowState.isManualScrolling = true;
+      };
+
+      slidesContainerRef.current.onmouseup = () => {
+        if (slideshowState.isScrolling) {
+          unsetScrollingTarget();
         }
       };
 
-      slidesContainerRef.current.onmousedown = setScrollingTarget;
-      slidesContainerRef.current.ontouchstart = setScrollingTarget;
-
-      slidesContainerRef.current.onmouseup = debounce(
-        unsetScrollingTarget,
-        100
-      );
-      slidesContainerRef.current.ontouchend = debounce(
-        unsetScrollingTarget,
-        500
-      );
-    }
-  }, [enabled, slidesContainerRef, setActiveSlideIdx, scrollAlignment]);
-
-  useEffect(() => {
-    if (enabled && thumbnailsContainerRef.current) {
-      const setScrollingTarget = (e?: MouseEvent | TouchEvent) => {
-        slideshowState.manualScrollingThumbnails = true;
+      slidesContainerRef.current.ontouchend = () => {
+        if (slideshowState.isScrolling) {
+          unsetScrollingTarget();
+        }
       };
-
-      const unsetScrollingTarget = (e?: MouseEvent | TouchEvent) => {
-        slideshowState.manualScrollingThumbnails = false;
-      };
-
-      thumbnailsContainerRef.current.onmousedown = setScrollingTarget;
-      thumbnailsContainerRef.current.ontouchstart = setScrollingTarget;
-
-      thumbnailsContainerRef.current.onmouseup = unsetScrollingTarget;
-      thumbnailsContainerRef.current.ontouchend = debounce(
-        unsetScrollingTarget,
-        1200
-      );
     }
-  }, [enabled, thumbnailsContainerRef]);
+  }, [options.onSlideScrollStart, enabled]);
 };

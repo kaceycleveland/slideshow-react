@@ -1,0 +1,58 @@
+/* fade in and out */
+.default-container {
+  .default-gallery-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    height: 600px;
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+
+    .image-container,
+    .component-container {
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      position: relative;
+      max-width: 600px;
+      flex-basis: 100%;
+      flex-grow: 0;
+      flex-shrink: 0;
+      height: 600px;
+    }
+
+    .component-container {
+      background-color: beige;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-container {
+      .blur-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 1;
+        transition: opacity 0.2s linear;
+
+        &.hide {
+          opacity: 0;
+        }
+      }
+
+      &.hide {
+        display: none;
+      }
+
+      .main-image,
+      .blur-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+}

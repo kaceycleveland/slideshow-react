@@ -1,21 +1,27 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { SlideOptions } from "./SlideOptions";
 import { SlideshowOptions } from "./SlideshowOptions";
-import {
-  assignBlurSrc,
-  assignDefaultClasses,
-  assignPreloadingDepth,
-  assignThumbnailClick,
-} from "./utils";
+import { assignBlurSrc, assignPreloadingDepth } from "./utils";
 import { DEFAULT_SLIDESHOW_OPTIONS } from "./utils/defaultSlideshowOptions";
 import { useScrollSetup } from "./useScrollSetup";
-import { performScroll } from "../utils/performScroll";
 import { LEFT_KEY, RIGHT_KEY } from "./Constants";
+import waitForScrollEnd from "../utils/waitForScrollEnd";
+import debounce from "../utils/debounce";
+import { performScroll, setScroll } from "../utils/performScroll";
 
 export interface SlideshowState {
-  manualScrollingSlides: boolean;
-  manualScrollingThumbnails: boolean;
+  prevActiveSlideIdx: number;
   activeSlideIdx: number;
+  isScrolling: boolean;
+  isManualScrolling: boolean;
 }
 
 /**
@@ -26,164 +32,156 @@ export const useSlideshow = (
   passedOptions?: SlideshowOptions
 ) => {
   const rootSlidesContainerRef = useRef<HTMLDivElement>(null);
-  const rootThumbnailContainerRef = useRef<HTMLDivElement>(null);
   const slidesRef = useRef<HTMLImageElement[]>([]);
-  const thumbnailRefs = useRef<HTMLImageElement[]>([]);
+  const [slidesLoaded, setSlidesLoaded] = useState(false);
 
   const options = useMemo(
     () => ({
       ...DEFAULT_SLIDESHOW_OPTIONS,
       ...passedOptions,
-      defaultClasses: {
-        ...DEFAULT_SLIDESHOW_OPTIONS.defaultClasses,
-        ...passedOptions?.defaultClasses,
-      },
     }),
     [passedOptions]
   );
   const slideshowState = useMemo<SlideshowState>(
     () => ({
-      manualScrollingSlides: false,
-      manualScrollingThumbnails: false,
+      prevActiveSlideIdx: -1,
       activeSlideIdx:
         options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex ?? 0,
+      isScrolling: false,
+      isManualScrolling: false,
+      isAutoScrolling: false,
     }),
     []
   );
   const [activeSlideIdx, setActiveSlideIdx] = useState(
     options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex
   );
-  const [loadedThumbnailMap, setLoadedThumbnailMap] = useState<boolean[]>([]);
   const [loadedSlideMap, setLoadedSlideMap] = useState<boolean[]>([]);
 
-  const setSlideIdx = useCallback(
-    async (idx: number) => {
-      let usedIdx = idx;
-      if (idx >= slideOptions.length) usedIdx = 0;
-      else if (idx < 0) usedIdx = slideOptions.length - 1;
-      setActiveSlideIdx(usedIdx);
-      const foundParentSlideElement = slidesRef.current[usedIdx].parentElement;
+  const performSlideshowScroll = useCallback(
+    async (index: number, shouldPerformScroll = false) => {
+      // console.log("SCROLLING TO ", index);
+      const foundParentSlideElement = slidesRef.current[index];
       if (rootSlidesContainerRef.current && foundParentSlideElement) {
-        performScroll(
-          rootSlidesContainerRef.current,
-          foundParentSlideElement,
-          "center"
-        );
-      }
-
-      const foundThumbnailElement = thumbnailRefs.current[usedIdx];
-      if (
-        rootThumbnailContainerRef.current &&
-        foundThumbnailElement &&
-        foundThumbnailElement.parentElement
-      ) {
-        performScroll(
-          rootThumbnailContainerRef.current,
-          foundThumbnailElement.parentElement,
-          options.scrollAlignment
-        );
+        // await waitForScrollEnd(rootSlidesContainerRef.current);
+        await waitForScrollEnd(rootSlidesContainerRef.current);
+        if (shouldPerformScroll) {
+          performScroll(
+            rootSlidesContainerRef.current,
+            foundParentSlideElement,
+            "center"
+          );
+        }
+        await waitForScrollEnd(rootSlidesContainerRef.current);
+        // await new Promise((r) => setTimeout(r, 200));
+        slideshowState.isScrolling = false;
+        if (
+          options.onSlideScrollEnd &&
+          slideshowState.activeSlideIdx === index
+        ) {
+          options.onSlideScrollEnd(index);
+        }
       }
     },
-    [
-      rootSlidesContainerRef,
-      rootThumbnailContainerRef,
-      thumbnailRefs,
-      slidesRef,
-      setActiveSlideIdx,
-      activeSlideIdx,
-      slideshowState,
-    ]
+    [options.onSlideScrollEnd]
   );
 
-  const parsedSlides: SlideOptions[] = useMemo(() => {
-    const assignedSlides: SlideOptions[] = slideOptions.map(
-      (slideOption, slideIndex) => {
-        const base: SlideOptions = { ...slideOption };
-        base.dataIdx = slideIndex;
+  useEffect(() => {
+    const foundParentSlideElement = slidesRef.current[activeSlideIdx];
+    if (rootSlidesContainerRef.current && foundParentSlideElement) {
+      setScroll(
+        rootSlidesContainerRef.current,
+        foundParentSlideElement,
+        "center"
+      );
+    }
+  }, []);
 
-        base.loaded = loadedSlideMap[slideIndex];
-        if ("main" in base) {
-          // Generate and assign blur images to each slide if not defined
-          assignBlurSrc(base.main, options?.getBlurSrc);
+  const getNextIndex = useCallback(
+    (index: number) => {
+      let nextIdx = index;
+      if (index >= slideOptions.length) nextIdx = 0;
+      else if (index < 0) nextIdx = slideOptions.length - 1;
+      return nextIdx;
+    },
+    [slideOptions.length]
+  );
 
-          // Assign default classes to each slide if they are not defined
-          assignDefaultClasses(base.main, options?.defaultClasses);
+  const setSlideIdxInternal = useCallback(
+    (idx: number, shouldPerformScroll = false) => {
+      let nextIdx = getNextIndex(idx);
+      setActiveSlideIdx((prevIndex) => {
+        // Handles callback on auto scrolling (button press or some other index setting)
+        if (shouldPerformScroll && options.onSlideScrollStart) {
+          options.onSlideScrollStart(prevIndex);
         }
+        performSlideshowScroll(nextIdx, shouldPerformScroll);
+        return nextIdx;
+      });
+    },
+    [getNextIndex, performSlideshowScroll, options.onSlideScrollStart]
+  );
 
-        base.ref = (el) => {
-          if (el) slidesRef.current[slideIndex] = el;
-        };
+  const setSlideIdx = useCallback(
+    debounce((idx: number) => setSlideIdxInternal(idx, true), 200),
+    [setSlideIdxInternal]
+  );
 
-        if ("thumbnail" in base && base.thumbnail) {
-          base.thumbnail.loaded = loadedThumbnailMap[slideIndex];
-          assignBlurSrc(base.thumbnail, options?.getThumbnailBlurSrc);
-          assignDefaultClasses(
-            base.thumbnail,
-            options?.defaultThumbnailClasses
-          );
-          assignThumbnailClick(base.thumbnail, slideIndex, setSlideIdx);
-          if (base.thumbnail.imgProps) {
-            base.thumbnail.imgProps.ref = (el) => {
-              if (el) thumbnailRefs.current[slideIndex] = el;
-            };
-          }
-        }
-
-        return base;
-      }
-    );
-
-    return assignedSlides;
-  }, [
-    slideOptions,
-    setSlideIdx,
-    slidesRef,
-    thumbnailRefs,
-    options,
-    loadedSlideMap,
-    loadedThumbnailMap,
-  ]);
-
-  const activeSlides: SlideOptions[] = useMemo(() => {
-    assignPreloadingDepth(
-      parsedSlides,
+  const preloadedSlides = useMemo(() => {
+    return assignPreloadingDepth(
+      slideOptions,
       options.preloadDepth,
       activeSlideIdx,
-      options.nextImageIdxFn,
-      options.previousImageIdxFn
+      getNextIndex,
+      setLoadedSlideMap
     );
+  }, [slideOptions, options.preloadDepth, activeSlideIdx, getNextIndex]);
 
-    const assignedSlides: SlideOptions[] = parsedSlides.map(
-      (slideOption, slideIndex) => {
-        const base: SlideOptions = { ...slideOption };
-        // Assign active state to corresponding slide
-        base.active = slideIndex === activeSlideIdx;
-        base.dataIdx = slideIndex;
+  const parsedSlides = useMemo(() => {
+    const assignedSlides = preloadedSlides.map((slideOption, slideIndex) => {
+      const base: typeof slideOption = { ...slideOption };
+      base.dataIdx = slideIndex;
 
-        return base;
+      base.loaded = loadedSlideMap[slideIndex];
+      if ("image" in base) {
+        base.original = base.image;
+        // Generate and assign blur images to each slide if not defined
+        assignBlurSrc(base, options?.getBlurSrc);
       }
-    );
+
+      base.ref = (el) => {
+        if (el) slidesRef.current[slideIndex] = el;
+        if (slidesRef.current.length === preloadedSlides.length)
+          setSlidesLoaded(true);
+      };
+
+      return base;
+    });
+
     return assignedSlides;
-  }, [
-    parsedSlides,
-    options.preloadDepth,
-    activeSlideIdx,
-    options.nextImageIdxFn,
-    options.previousImageIdxFn,
-  ]);
+  }, [preloadedSlides, loadedSlideMap, options.getBlurSrc]);
+
+  const activeSlides = useMemo(() => {
+    const assignedSlides = parsedSlides.map((slideOption, slideIndex) => {
+      const base = { ...slideOption };
+      // Assign active state to corresponding slide
+      base.active = slideIndex === activeSlideIdx;
+      base.dataIdx = slideIndex;
+
+      return base;
+    });
+    return assignedSlides;
+  }, [getNextIndex, parsedSlides, options.preloadDepth, activeSlideIdx]);
 
   useScrollSetup(
     activeSlides.length,
-    setLoadedThumbnailMap,
     setLoadedSlideMap,
-    setActiveSlideIdx,
+    setSlideIdxInternal,
     slideshowState,
     slidesRef,
     rootSlidesContainerRef,
-    thumbnailRefs,
-    rootThumbnailContainerRef,
-    options.scrollAlignment,
-    passedOptions?.isScrolling
+    options,
+    slidesLoaded
   );
 
   const activeSlide = useMemo(
@@ -192,13 +190,12 @@ export const useSlideshow = (
   );
 
   const goNextSlide = useCallback(
-    () => setSlideIdx(options?.nextImageIdxFn(activeSlides, activeSlideIdx)),
+    () => setSlideIdx(activeSlideIdx + 1),
     [activeSlides, activeSlideIdx]
   );
 
   const goPreviousSlide = useCallback(
-    () =>
-      setSlideIdx(options?.previousImageIdxFn(activeSlides, activeSlideIdx)),
+    () => setSlideIdx(activeSlideIdx - 1),
     [activeSlides, activeSlideIdx]
   );
 
@@ -219,15 +216,11 @@ export const useSlideshow = (
   );
 
   useEffect(() => {
-    if (rootThumbnailContainerRef.current) {
-      rootThumbnailContainerRef.current.tabIndex = 0;
-      rootThumbnailContainerRef.current.onkeydown = setNextSlideIdxFocus;
-    }
     if (rootSlidesContainerRef.current) {
       rootSlidesContainerRef.current.tabIndex = 0;
       rootSlidesContainerRef.current.onkeydown = setNextSlideIdxFocus;
     }
-  }, [setNextSlideIdxFocus, rootSlidesContainerRef, rootThumbnailContainerRef]);
+  }, [setNextSlideIdxFocus, rootSlidesContainerRef]);
 
   return {
     /**
@@ -235,8 +228,6 @@ export const useSlideshow = (
      */
     slides: activeSlides,
     rootSlidesContainerRef: rootSlidesContainerRef,
-    rootThumbnailContainerRef: rootThumbnailContainerRef,
-    thumbnailRefs,
     /**
      * Current active slide object.
      */

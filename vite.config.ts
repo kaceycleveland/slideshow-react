@@ -11,16 +11,17 @@ export default defineConfig({
       insertTypesEntry: true,
     }),
   ],
+
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/main.ts"),
-      name: "reactSlideshow",
+      name: "slideshowReact",
       formats: ["es", "umd"],
-      fileName: (format) => `react-slideshow.${format}.js`,
+      fileName: (format) => `slideshow-react.${format}.js`,
     },
     sourcemap: isProd ? false : true,
     rollupOptions: {
-      external: ["react", "react-dom"],
+      external: ["react", "react-dom", "src/dev"],
       output: {
         globals: {
           react: "React",

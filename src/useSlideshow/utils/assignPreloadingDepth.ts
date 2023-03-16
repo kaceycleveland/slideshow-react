@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { SlideOptions } from "../SlideOptions";
 import { NavigateImageFn } from "../SlideshowOptions";
 
@@ -5,28 +6,29 @@ export const assignPreloadingDepth = (
   slideOptions: SlideOptions[],
   preloadDepth: number,
   activeIdx: number,
-  nextImageIdxFn: NavigateImageFn,
-  prevImageIdxFn: NavigateImageFn
+  getNextIndex: (index: number) => number,
+  setLoadedSlideMap: Dispatch<SetStateAction<boolean[]>>
 ) => {
+  const idxToLoad: boolean[] = [];
   let nextTrack = activeIdx;
   let prevTrack = activeIdx;
-  const activeSlide = slideOptions[activeIdx];
-  if ("main" in activeSlide) {
-    activeSlide.loaded = true;
-    for (let i = 0; i < preloadDepth; i++) {
-      const nextImageIdx = nextImageIdxFn(slideOptions, nextTrack);
-      const prevImageIdx = prevImageIdxFn(slideOptions, prevTrack);
-      if (nextImageIdx) {
-        nextTrack = nextImageIdx;
-        const nextSlide = slideOptions[nextTrack];
-        if ("main" in nextSlide) nextSlide.loaded = true;
-      }
-      if (prevImageIdx) {
-        prevTrack = prevImageIdx;
-        const prevSlide = slideOptions[prevTrack];
-        if ("main" in prevSlide) prevSlide.loaded = true;
-      }
-    }
+  idxToLoad[activeIdx] = true;
+  // Fix this to recurse out
+  for (let i = activeIdx; i < activeIdx + preloadDepth; i++) {
+    const nextImageIdx = getNextIndex(i + 1);
+    const prevImageIdx = getNextIndex(i - 1);
+    idxToLoad[nextImageIdx] = true;
+    idxToLoad[prevImageIdx] = true;
+    nextTrack = nextImageIdx;
+    prevTrack = prevImageIdx;
   }
-  return slideOptions;
+  setLoadedSlideMap((prevMap) => {
+    idxToLoad.forEach((bool, idx) => {
+      if (bool) {
+        prevMap[idx] = bool;
+      }
+    });
+    return [...prevMap];
+  });
+  return [...slideOptions];
 };

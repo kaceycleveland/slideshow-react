@@ -47,3 +47,20 @@ export const performScroll = (
     left,
   });
 };
+
+export const setScroll = (
+  containerElement: HTMLDivElement,
+  slideElement: HTMLElement,
+  alignment: ScrollAlignment
+) => {
+  containerElement.scrollTop = getVerticalSpacing(
+    containerElement,
+    slideElement,
+    alignment
+  );
+  containerElement.scrollLeft = getHorizontalSpacing(
+    containerElement,
+    slideElement,
+    alignment
+  );
+};
