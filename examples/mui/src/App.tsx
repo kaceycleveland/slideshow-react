@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useCallback } from "react";
 import { useSlideshow, SlideshowOptions, ImageMetadata } from "slideshow-react";
 import { DefaultSlides } from "./DefaultSlides";
-import { Box, Button } from "@mui/material";
+import { Box, Button, useTheme } from "@mui/material";
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
@@ -17,6 +17,19 @@ const slideOptions: SlideshowOptions = {
 };
 
 export const MuiSlideshow = () => {
+  const { breakpoints } = useTheme();
+
+  const getSrcSet = useCallback((imageMetadata: ImageMetadata) => {
+    if (imageMetadata.src) {
+      const src = imageMetadata.src.substring(0, imageMetadata.src.length - 15);
+      return `${src}?tr=w-300,h-300 300w, ${src}?tr=w-400,h-400 400w, ${src}?tr=w-600,h-600 600w`;
+    }
+  }, []);
+
+  const getSizes = useCallback(() => {
+    return `(max-width: ${breakpoints.values.sm}px) 300px, (max-width: ${breakpoints.values.lg}px) 400px, 600px`;
+  }, [breakpoints]);
+
   const {
     rootSlidesContainerRef,
     slides,
@@ -26,6 +39,8 @@ export const MuiSlideshow = () => {
     goPreviousSlide,
   } = useSlideshow(DefaultSlides, {
     getBlurSrc,
+    getSrcSet,
+    getSizes,
     getThumbnailBlurSrc: getBlurSrc,
     startingIndex: 1,
     ...slideOptions,
@@ -41,7 +56,7 @@ export const MuiSlideshow = () => {
           position: "relative",
           width: "100%",
           maxWidth: "1200px",
-          height: { xs: "300px", md: "600px" },
+          height: { xs: "300px", md: "400px", lg: "600px" },
           display: "flex",
           gap: "20px",
           overflowX: "auto",
@@ -59,7 +74,7 @@ export const MuiSlideshow = () => {
                 scrollSnapAlign: "center",
                 scrollSnapStop: "always",
                 position: "relative",
-                maxWidth: "600px",
+                maxWidth: { xs: "300px", md: "400px", lg: "600px" },
                 flexBasis: "100%",
                 flexGrow: 0,
                 flexShrink: 0,

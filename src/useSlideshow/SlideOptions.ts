@@ -9,6 +9,7 @@ export interface SharedComponentOptions {
   active?: boolean;
   ref?: Ref<any>;
   loaded?: boolean;
+  isSetToLoad?: boolean;
 }
 
 export interface SlideImageComponentOptions extends SharedComponentOptions {

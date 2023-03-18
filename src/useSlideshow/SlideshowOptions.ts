@@ -1,6 +1,4 @@
 import { ImageMetadata, SlideOptions } from "./SlideOptions";
-import { SlideshowClasses } from "./SlideshowClasses";
-
 export type NavigateImageFn = (
   slides: SlideOptions[],
   activeIndex: number
@@ -28,9 +26,17 @@ export interface SlideshowOptions {
    */
   getSrcSet?: (imageMetadata: ImageMetadata) => string | undefined;
   /**
-   * Function generate and assign a sizes prop for image slides
+   * Function to generate and assign a sizes prop for image slides
    */
   getSizes?: (imageMetadata: ImageMetadata) => string | undefined;
+  /**
+   * Function to generate and assign a srcSet prop for blur image slides
+   */
+  getBlurSrcSet?: (imageMetadata: ImageMetadata) => string | undefined;
+  /**
+   * Function to generate and assign a sizes prop for blur image slides
+   */
+  getBlurSizes?: (imageMetadata: ImageMetadata) => string | undefined;
   /**
    * Given the result of *nextImageIdxFn* and *previousImageIdxFn*, preload the slides at this given depth.
    *

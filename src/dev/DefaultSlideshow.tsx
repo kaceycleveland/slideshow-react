@@ -12,6 +12,13 @@ const getBlurSrc = (imageMetadata: ImageMetadata) => {
   return imageMetadata.src + ",bl-12";
 };
 
+const getBlurSrcSet = (imageMetadata: ImageMetadata) => {
+  if (imageMetadata.src) {
+    const src = imageMetadata.src.substring(0, imageMetadata.src.length - 21);
+    return `${src}?tr=w-300,h-300,bl-12 300w, ${src}?tr=w-400,h-400,bl-12 400w, ${src}?tr=w-600,h-600,bl-12 600w`;
+  }
+};
+
 const getSrcSet = (imageMetadata: ImageMetadata) => {
   if (imageMetadata.src) {
     const src = imageMetadata.src.substring(0, imageMetadata.src.length - 15);
@@ -22,11 +29,6 @@ const getSrcSet = (imageMetadata: ImageMetadata) => {
 const getSizes = (imageMetadata: ImageMetadata) => {
   return `(max-width: 800px) 300px, (max-width: 1200px) 400px, 600px`;
 };
-
-const SLIDES: SlideOptions[] = [
-  ...DefaultSlides,
-  { component: <div>Test</div> },
-];
 
 const slideOptions: SlideshowOptions = {
   onSlideScrollStart: (idx: number) => {
@@ -45,10 +47,12 @@ export const DefaultSlideshow = () => {
     index,
     goNextSlide,
     goPreviousSlide,
-  } = useSlideshow(SLIDES, {
+  } = useSlideshow(DefaultSlides, {
     getBlurSrc,
     getSrcSet,
     getSizes,
+    getBlurSrcSet,
+    getBlurSizes: getSizes,
     getThumbnailBlurSrc: getBlurSrc,
     startingIndex: 1,
     ...slideOptions,
@@ -90,7 +94,7 @@ export const DefaultSlideshow = () => {
                     {...slide.blurImage}
                   />
                 )}
-                {slide.loaded && (
+                {slide.isSetToLoad && (
                   <img className={"main-image"} {...slide.image} />
                 )}
               </div>

@@ -1,12 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SlideOptions } from "./SlideOptions";
 import { SlideshowOptions } from "./SlideshowOptions";
 import { assignBlurSrc, assignPreloadingDepth } from "./utils";
@@ -56,6 +48,9 @@ export const useSlideshow = (
   );
   const [activeSlideIdx, setActiveSlideIdx] = useState(
     options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex
+  );
+  const [markedToLoadSlideMap, setMarkedToLoadSlideMap] = useState<boolean[]>(
+    []
   );
   const [loadedSlideMap, setLoadedSlideMap] = useState<boolean[]>([]);
 
@@ -134,7 +129,7 @@ export const useSlideshow = (
       options.preloadDepth,
       activeSlideIdx,
       getNextIndex,
-      setLoadedSlideMap
+      setMarkedToLoadSlideMap
     );
   }, [slideOptions, options.preloadDepth, activeSlideIdx, getNextIndex]);
 
@@ -143,13 +138,20 @@ export const useSlideshow = (
       const base: typeof slideOption = { ...slideOption };
       base.dataIdx = slideIndex;
 
+      base.isSetToLoad = markedToLoadSlideMap[slideIndex];
       base.loaded = loadedSlideMap[slideIndex];
       if ("image" in base) {
         base.original = base.image;
+        base.image.onLoad = () => {
+          setLoadedSlideMap((prev) => {
+            prev[slideIndex] = true;
+            return [...prev];
+          });
+        };
         // Generate and assign blur images to each slide if not defined
         assignBlurSrc(base, options?.getBlurSrc);
-        assignSrcSet(base, options?.getSrcSet);
-        assignSizes(base, options?.getSizes);
+        assignSrcSet(base, options?.getSrcSet, options?.getBlurSrcSet);
+        assignSizes(base, options?.getSizes, options?.getBlurSizes);
       }
 
       base.ref = (el) => {
@@ -164,10 +166,13 @@ export const useSlideshow = (
     return assignedSlides;
   }, [
     preloadedSlides,
+    markedToLoadSlideMap,
     loadedSlideMap,
     options.getBlurSrc,
     options.getSrcSet,
     options.getSizes,
+    options?.getBlurSrcSet,
+    options?.getBlurSizes,
   ]);
 
   const activeSlides = useMemo(() => {
@@ -184,7 +189,7 @@ export const useSlideshow = (
 
   useScrollSetup(
     activeSlides.length,
-    setLoadedSlideMap,
+    setMarkedToLoadSlideMap,
     setSlideIdxInternal,
     slideshowState,
     slidesRef,
@@ -235,12 +240,12 @@ export const useSlideshow = (
     /**
      * Derived slides from the given passed options and the original slides array.
      */
-    slides: activeSlides,
+    slides: activeSlides as SlideOptions[],
     rootSlidesContainerRef: rootSlidesContainerRef,
     /**
      * Current active slide object.
      */
-    active: activeSlide,
+    active: activeSlide as SlideOptions,
     /**
      * Current active slide index.
      */

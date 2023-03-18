@@ -7,7 +7,7 @@ export const assignPreloadingDepth = (
   preloadDepth: number,
   activeIdx: number,
   getNextIndex: (index: number) => number,
-  setLoadedSlideMap: Dispatch<SetStateAction<boolean[]>>
+  setMarkedToLoadSlideMap: Dispatch<SetStateAction<boolean[]>>
 ) => {
   const idxToLoad: boolean[] = [];
   let nextTrack = activeIdx;
@@ -22,7 +22,7 @@ export const assignPreloadingDepth = (
     nextTrack = nextImageIdx;
     prevTrack = prevImageIdx;
   }
-  setLoadedSlideMap((prevMap) => {
+  setMarkedToLoadSlideMap((prevMap) => {
     idxToLoad.forEach((bool, idx) => {
       if (bool) {
         prevMap[idx] = bool;

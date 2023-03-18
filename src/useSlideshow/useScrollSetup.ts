@@ -13,7 +13,7 @@ import { SlideshowState } from "./useSlideshow";
 
 const getSlideObserver =
   (
-    setLoadedSlideMap: Dispatch<SetStateAction<boolean[]>>
+    setMarkedToLoadSlideMap: Dispatch<SetStateAction<boolean[]>>
   ): IntersectionObserverCallback =>
   (entries) => {
     entries.forEach((entry) => {
@@ -21,7 +21,7 @@ const getSlideObserver =
         const index = entry.target.getAttribute(DATA_IDX_ATTR);
         if (index) {
           const numIndex = parseInt(index);
-          setLoadedSlideMap((prev) => {
+          setMarkedToLoadSlideMap((prev) => {
             if (prev[numIndex]) return prev;
             prev[numIndex] = true;
             return [...prev];
@@ -47,7 +47,7 @@ const getSlideStateObserver =
 
 export const useScrollSetup = (
   length: number,
-  setLoadedSlideMap: Dispatch<SetStateAction<boolean[]>>,
+  setMarkedToLoadSlideMap: Dispatch<SetStateAction<boolean[]>>,
   setSlideIdxInternal: (idx: number, shouldPerformScroll?: boolean) => void,
   slideshowState: SlideshowState,
   slidesRef: MutableRefObject<HTMLImageElement[]>,
@@ -60,7 +60,7 @@ export const useScrollSetup = (
       slidesRef.current = slidesRef.current.slice(0, length);
       // Load slides on intersection and set slides index
       const slideLoaderObserver = new IntersectionObserver(
-        getSlideObserver(setLoadedSlideMap),
+        getSlideObserver(setMarkedToLoadSlideMap),
         {
           root: slidesContainerRef.current,
           rootMargin: "0px",

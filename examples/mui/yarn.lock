@@ -1032,10 +1032,10 @@ semver@^6.3.0:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
   integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
 
-slideshow-react@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/slideshow-react/-/slideshow-react-0.1.1.tgz#33d832942c92905bfee7df9c1249ff21652413ca"
-  integrity sha512-BRp09LLsBmiZ4kxunOwp/llWFsyMNT/kHqTtEqTys5U7ocImMKbiDa2mSuIbYktnmHZrqwGqVvwJ4XaeGzstOA==
+slideshow-react@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/slideshow-react/-/slideshow-react-0.1.2.tgz#dedffd607d65555db9b86540d36eab082b3dc810"
+  integrity sha512-PqaQWNYK7NMvgKZjWsNlt5zA8Y/re+u7pr2xO7vaatsNmBxTQNjEE5GhRHEs1k2H8zhIIvnoAbUJRzoxfKOOjw==
 
 source-map-js@^1.0.2:
   version "1.0.2"

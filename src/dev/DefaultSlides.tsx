@@ -36,4 +36,5 @@ export const DefaultSlides: SlideOptions[] = [
       src: "https://ik.imagekit.io/z2cba9cyv/6.jpg?tr=w-600,h-600",
     },
   },
+  { component: <div>Test</div> },
 ];
