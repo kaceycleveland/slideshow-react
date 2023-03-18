@@ -1,5 +1,11 @@
 # slideshow-react
 
+## 0.1.1
+
+### Patch Changes
+
+- 08be3b3: Fix package.json to point towards correct production files
+
 ## 0.1.0
 
 ### Minor Changes
