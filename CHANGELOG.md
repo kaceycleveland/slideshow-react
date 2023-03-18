@@ -1,5 +1,13 @@
 # slideshow-react
 
+## 0.1.3
+
+### Patch Changes
+
+- e8e222a: Simplify some typings and correct loading logic via a `isSetToLoad` `SlideOptions` field
+- e8e222a: Update MUI example to 0.1.2
+- e8e222a: Added additional `srcSet` and `sizes` support via generating functions
+
 ## 0.1.2
 
 ### Patch Changes
