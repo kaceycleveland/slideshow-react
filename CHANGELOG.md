@@ -1,5 +1,12 @@
 # slideshow-react
 
+## 0.1.2
+
+### Patch Changes
+
+- e4ffdcd: Added MUI example
+- a42cb15: Added support for generating and assigning srcSet and sizes props for image slides
+
 ## 0.1.1
 
 ### Patch Changes
