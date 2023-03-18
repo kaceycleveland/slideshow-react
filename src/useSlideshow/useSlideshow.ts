@@ -16,6 +16,7 @@ import { LEFT_KEY, RIGHT_KEY } from "./Constants";
 import waitForScrollEnd from "../utils/waitForScrollEnd";
 import debounce from "../utils/debounce";
 import { performScroll, setScroll } from "../utils/performScroll";
+import { assignSizes, assignSrcSet } from "./utils/assignSrcSet";
 
 export interface SlideshowState {
   prevActiveSlideIdx: number;
@@ -147,6 +148,8 @@ export const useSlideshow = (
         base.original = base.image;
         // Generate and assign blur images to each slide if not defined
         assignBlurSrc(base, options?.getBlurSrc);
+        assignSrcSet(base, options?.getSrcSet);
+        assignSizes(base, options?.getSizes);
       }
 
       base.ref = (el) => {
@@ -159,7 +162,13 @@ export const useSlideshow = (
     });
 
     return assignedSlides;
-  }, [preloadedSlides, loadedSlideMap, options.getBlurSrc]);
+  }, [
+    preloadedSlides,
+    loadedSlideMap,
+    options.getBlurSrc,
+    options.getSrcSet,
+    options.getSizes,
+  ]);
 
   const activeSlides = useMemo(() => {
     const assignedSlides = parsedSlides.map((slideOption, slideIndex) => {

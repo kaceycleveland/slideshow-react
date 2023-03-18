@@ -8,13 +8,13 @@ export type NavigateImageFn = (
 
 export interface SlideshowOptions {
   /**
-   *
+   * Triggers on slide starting a scroll transition
    */
-  onSlideScrollStart?: (index: number) => void;
+  onSlideScrollStart?: (startingIndex: number) => void;
   /**
-   *
+   * Triggers on slide ending a scroll transition
    */
-  onSlideScrollEnd?: (index: number) => void;
+  onSlideScrollEnd?: (endingIndex: number) => void;
   /**
    * Will derive a blurred src image for the given *ImageMetadata* found in the passed slides array to load prior to the high quality image.
    */
@@ -23,6 +23,14 @@ export interface SlideshowOptions {
    * Will derive a blurred src image for the given thumbnail *ImageMetadata* found in the derived slides array to load prior to the high quality image.
    */
   getThumbnailBlurSrc?: (imageMetadata: ImageMetadata) => string;
+  /**
+   * Function to generate and assign a srcSet prop for image slides
+   */
+  getSrcSet?: (imageMetadata: ImageMetadata) => string | undefined;
+  /**
+   * Function generate and assign a sizes prop for image slides
+   */
+  getSizes?: (imageMetadata: ImageMetadata) => string | undefined;
   /**
    * Given the result of *nextImageIdxFn* and *previousImageIdxFn*, preload the slides at this given depth.
    *

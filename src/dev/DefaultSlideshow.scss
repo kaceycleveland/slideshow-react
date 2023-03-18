@@ -4,10 +4,10 @@
     position: relative;
     width: 100%;
     max-width: 1200px;
-    height: 600px;
+    height: 300px;
     display: flex;
     gap: 20px;
-    overflow-x: auto;
+    overflow-x: hidden;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
 
@@ -16,11 +16,11 @@
       scroll-snap-align: center;
       scroll-snap-stop: always;
       position: relative;
-      max-width: 600px;
+      max-width: 300px;
       flex-basis: 100%;
       flex-grow: 0;
       flex-shrink: 0;
-      height: 600px;
+      height: 100%;
     }
 
     .component-container {
@@ -52,6 +52,34 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+      }
+    }
+  }
+}
+
+$breakpoint-tablet: 800px;
+@media (min-width: $breakpoint-tablet) {
+  .default-container {
+    .default-gallery-container {
+      height: 400px;
+
+      .image-container,
+      .component-container {
+        max-width: 400px;
+      }
+    }
+  }
+}
+
+$breakpoint-desktop: 1200px;
+@media (min-width: $breakpoint-desktop) {
+  .default-container {
+    .default-gallery-container {
+      height: 600px;
+
+      .image-container,
+      .component-container {
+        max-width: 600px;
       }
     }
   }
