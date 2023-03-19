@@ -1,5 +1,13 @@
 # slideshow-react
 
+## 0.1.4
+
+### Patch Changes
+
+- a1ed06d: Added additional type narrowing to the `slides` object being passed and returned from `useSlideshow`
+- 7c41d89: Update README to match current implementation and added MUI codesandbox example link
+- a1ed06d: Version bumped MUI example
+
 ## 0.1.3
 
 ### Patch Changes
