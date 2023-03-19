@@ -102,7 +102,7 @@ export const MuiSlideshow = () => {
                       {...slide.blurImage}
                     />
                   )}
-                  {slide.loaded && (
+                  {slide.isSetToLoad && (
                     <Box
                       component="img"
                       sx={{ width: "100%", height: "100%", objectFit: "cover" }}

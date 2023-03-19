@@ -58,6 +58,8 @@ export const DefaultSlideshow = () => {
     ...slideOptions,
   });
 
+  console.log("active", index);
+
   return (
     <div className="default-container">
       <button onClick={goPreviousSlide}>Prev</button>

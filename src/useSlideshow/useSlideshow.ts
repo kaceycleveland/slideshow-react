@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { SlideOptions } from "./SlideOptions";
+import { ParsedSlideOptions, SlideOptions } from "./SlideOptions";
 import { SlideshowOptions } from "./SlideshowOptions";
 import { assignBlurSrc, assignPreloadingDepth } from "./utils";
 import { DEFAULT_SLIDESHOW_OPTIONS } from "./utils/defaultSlideshowOptions";
@@ -135,14 +135,27 @@ export const useSlideshow = (
 
   const parsedSlides = useMemo(() => {
     const assignedSlides = preloadedSlides.map((slideOption, slideIndex) => {
-      const base: typeof slideOption = { ...slideOption };
-      base.dataIdx = slideIndex;
+      const base = {
+        ...slideOption,
+        dataIdx: -1,
+        isSetToLoad: false,
+        loaded: false,
+        ref: () => undefined,
+      };
 
-      base.isSetToLoad = markedToLoadSlideMap[slideIndex];
-      base.loaded = loadedSlideMap[slideIndex];
+      base.dataIdx = slideIndex;
+      base.isSetToLoad = markedToLoadSlideMap[slideIndex] ?? false;
+      base.loaded = loadedSlideMap[slideIndex] ?? false;
+
+      if (base.isSetToLoad === undefined) {
+        base.isSetToLoad = true;
+      }
+      base.isSetToLoad;
+
       if ("image" in base) {
-        base.original = base.image;
-        base.image.onLoad = () => {
+        const prevOnLoad = base.image.onLoad;
+        base.image.onLoad = (e) => {
+          if (prevOnLoad) prevOnLoad(e);
           setLoadedSlideMap((prev) => {
             prev[slideIndex] = true;
             return [...prev];
@@ -154,10 +167,11 @@ export const useSlideshow = (
         assignSizes(base, options?.getSizes, options?.getBlurSizes);
       }
 
-      base.ref = (el) => {
+      base.ref = (el?: any) => {
         if (el) slidesRef.current[slideIndex] = el;
         if (slidesRef.current.length === preloadedSlides.length)
           setSlidesLoaded(true);
+        return undefined;
       };
 
       return base;
@@ -177,7 +191,7 @@ export const useSlideshow = (
 
   const activeSlides = useMemo(() => {
     const assignedSlides = parsedSlides.map((slideOption, slideIndex) => {
-      const base = { ...slideOption };
+      const base = { ...slideOption, active: false };
       // Assign active state to corresponding slide
       base.active = slideIndex === activeSlideIdx;
       base.dataIdx = slideIndex;
@@ -240,7 +254,7 @@ export const useSlideshow = (
     /**
      * Derived slides from the given passed options and the original slides array.
      */
-    slides: activeSlides as SlideOptions[],
+    slides: activeSlides as ParsedSlideOptions[],
     rootSlidesContainerRef: rootSlidesContainerRef,
     /**
      * Current active slide object.
