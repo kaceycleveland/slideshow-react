@@ -1,1 +1,1 @@
-export * from "./useSlideshow";
+export * from './useSlideshow';

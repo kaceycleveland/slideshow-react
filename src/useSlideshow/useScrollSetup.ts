@@ -5,15 +5,15 @@ import {
   SetStateAction,
   useCallback,
   useEffect,
-} from "react";
-import waitForScrollEnd from "../utils/waitForScrollEnd";
-import { DATA_IDX_ATTR } from "./Constants";
-import { SlideshowOptions } from "./SlideshowOptions";
-import { SlideshowState } from "./useSlideshow";
+} from 'react';
+import waitForScrollEnd from '../utils/waitForScrollEnd';
+import { DATA_IDX_ATTR } from './Constants';
+import { SlideshowOptions } from './SlideshowOptions';
+import { SlideshowState } from './useSlideshow';
 
 const getSlideObserver =
   (
-    setMarkedToLoadSlideMap: Dispatch<SetStateAction<boolean[]>>
+    setMarkedToLoadSlideMap: Dispatch<SetStateAction<boolean[]>>,
   ): IntersectionObserverCallback =>
   (entries) => {
     entries.forEach((entry) => {
@@ -53,7 +53,7 @@ export const useScrollSetup = (
   slidesRef: MutableRefObject<HTMLImageElement[]>,
   slidesContainerRef: RefObject<HTMLDivElement>,
   options: SlideshowOptions,
-  enabled?: boolean
+  enabled?: boolean,
 ) => {
   useEffect(() => {
     if (enabled) {
@@ -63,18 +63,18 @@ export const useScrollSetup = (
         getSlideObserver(setMarkedToLoadSlideMap),
         {
           root: slidesContainerRef.current,
-          rootMargin: "0px",
+          rootMargin: '0px',
           threshold: 0.3,
-        }
+        },
       );
 
       const slideStateObserver = new IntersectionObserver(
         getSlideStateObserver(slideshowState),
         {
           root: slidesContainerRef.current,
-          rootMargin: "0px",
+          rootMargin: '0px',
           threshold: 0.95,
-        }
+        },
       );
 
       slidesRef.current.forEach((slide) => {
@@ -101,7 +101,7 @@ export const useScrollSetup = (
           }
         });
     },
-    [slideshowState, setSlideIdxInternal]
+    [slideshowState, setSlideIdxInternal],
   );
 
   useEffect(() => {

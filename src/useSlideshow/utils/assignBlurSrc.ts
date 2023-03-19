@@ -1,9 +1,9 @@
-import { SlideImageComponentOptions } from "../SlideOptions";
-import { SlideshowOptions } from "../SlideshowOptions";
+import { SlideImageComponentOptions } from '../SlideOptions';
+import { SlideshowOptions } from '../SlideshowOptions';
 
 export const assignBlurSrc = (
   slideImage: SlideImageComponentOptions,
-  getBlurSrc?: SlideshowOptions["getBlurSrc"]
+  getBlurSrc?: SlideshowOptions['getBlurSrc'],
 ) => {
   if (!slideImage.blurImage) slideImage.blurImage = {};
   const blurImg = slideImage.blurImage;

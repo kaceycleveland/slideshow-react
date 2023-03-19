@@ -1,7 +1,7 @@
-import { ImageMetadata, SlideOptions } from "./SlideOptions";
+import { ImageMetadata, SlideOptions } from './SlideOptions';
 export type NavigateImageFn = (
   slides: SlideOptions[],
-  activeIndex: number
+  activeIndex: number,
 ) => number;
 
 export interface SlideshowOptions {
@@ -52,5 +52,5 @@ export interface SlideshowOptions {
    *
    * *Default*: "center"
    */
-  scrollAlignment?: "left" | "right" | "center" | "top" | "bottom";
+  scrollAlignment?: 'left' | 'right' | 'center' | 'top' | 'bottom';
 }

@@ -1,15 +1,15 @@
-import "./DefaultSlideshow.scss";
+import './DefaultSlideshow.scss';
 import {
   ImageMetadata,
   SlideOptions,
   SlideshowOptions,
   useSlideshow,
-} from "../main";
-import { DefaultSlides } from "./DefaultSlides";
-import { SLIDE_IMAGE_CONTAINER_TEST_ID } from "../TestConstants";
+} from '../main';
+import { DefaultSlides } from './DefaultSlides';
+import { SLIDE_IMAGE_CONTAINER_TEST_ID } from '../TestConstants';
 
 const getBlurSrc = (imageMetadata: ImageMetadata) => {
-  return imageMetadata.src + ",bl-12";
+  return imageMetadata.src + ',bl-12';
 };
 
 const getBlurSrcSet = (imageMetadata: ImageMetadata) => {
@@ -32,10 +32,10 @@ const getSizes = (imageMetadata: ImageMetadata) => {
 
 const slideOptions: SlideshowOptions = {
   onSlideScrollStart: (idx: number) => {
-    console.log("scroll start", idx);
+    console.log('scroll start', idx);
   },
   onSlideScrollEnd: (idx: number) => {
-    console.log("scroll end", idx);
+    console.log('scroll end', idx);
   },
 };
 
@@ -58,7 +58,7 @@ export const DefaultSlideshow = () => {
     ...slideOptions,
   });
 
-  console.log("active", index);
+  console.log('active', index);
 
   return (
     <div className="default-container">
@@ -70,7 +70,7 @@ export const DefaultSlideshow = () => {
         data-testid={SLIDE_IMAGE_CONTAINER_TEST_ID}
       >
         {slides.map((slide, idx) => {
-          if ("component" in slide) {
+          if ('component' in slide) {
             return (
               <div
                 key={idx}
@@ -83,7 +83,7 @@ export const DefaultSlideshow = () => {
             );
           }
           return (
-            "image" in slide && (
+            'image' in slide && (
               <div
                 key={idx}
                 ref={slide.ref}
@@ -92,12 +92,12 @@ export const DefaultSlideshow = () => {
               >
                 {slide.blurImage && (
                   <img
-                    className={"blur-image " + (slide.loaded ? "hide" : "")}
+                    className={'blur-image ' + (slide.loaded ? 'hide' : '')}
                     {...slide.blurImage}
                   />
                 )}
                 {slide.isSetToLoad && (
-                  <img className={"main-image"} {...slide.image} />
+                  <img className={'main-image'} {...slide.image} />
                 )}
               </div>
             )

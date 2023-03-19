@@ -1,13 +1,13 @@
-import { Dispatch, SetStateAction } from "react";
-import { SlideOptions } from "../SlideOptions";
-import { NavigateImageFn } from "../SlideshowOptions";
+import { Dispatch, SetStateAction } from 'react';
+import { SlideOptions } from '../SlideOptions';
+import { NavigateImageFn } from '../SlideshowOptions';
 
 export const assignPreloadingDepth = (
   slideOptions: SlideOptions[],
   preloadDepth: number,
   activeIdx: number,
   getNextIndex: (index: number) => number,
-  setMarkedToLoadSlideMap: Dispatch<SetStateAction<boolean[]>>
+  setMarkedToLoadSlideMap: Dispatch<SetStateAction<boolean[]>>,
 ) => {
   const idxToLoad: boolean[] = [];
   let nextTrack = activeIdx;

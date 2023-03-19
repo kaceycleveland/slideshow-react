@@ -1,5 +1,5 @@
-import { ReactNode, Ref } from "react";
-import { ImageComponentProps } from "../ImageComponentProps";
+import { ReactNode, Ref } from 'react';
+import { ImageComponentProps } from '../ImageComponentProps';
 
 export interface ImageMetadata extends ImageComponentProps {
   ref?: Ref<HTMLImageElement>;

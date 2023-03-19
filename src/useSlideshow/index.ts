@@ -1,3 +1,3 @@
-export * from "./useSlideshow";
-export * from "./SlideOptions";
-export * from "./SlideshowOptions";
+export * from './useSlideshow';
+export * from './SlideOptions';
+export * from './SlideshowOptions';

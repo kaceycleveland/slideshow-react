@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ParsedSlideOptions, SlideOptions } from "./SlideOptions";
-import { SlideshowOptions } from "./SlideshowOptions";
-import { assignBlurSrc, assignPreloadingDepth } from "./utils";
-import { DEFAULT_SLIDESHOW_OPTIONS } from "./utils/defaultSlideshowOptions";
-import { useScrollSetup } from "./useScrollSetup";
-import { LEFT_KEY, RIGHT_KEY } from "./Constants";
-import waitForScrollEnd from "../utils/waitForScrollEnd";
-import debounce from "../utils/debounce";
-import { performScroll, setScroll } from "../utils/performScroll";
-import { assignSizes, assignSrcSet } from "./utils/assignSrcSet";
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ParsedSlideOptions, SlideOptions } from './SlideOptions';
+import { SlideshowOptions } from './SlideshowOptions';
+import { assignBlurSrc, assignPreloadingDepth } from './utils';
+import { DEFAULT_SLIDESHOW_OPTIONS } from './utils/defaultSlideshowOptions';
+import { useScrollSetup } from './useScrollSetup';
+import { LEFT_KEY, RIGHT_KEY } from './Constants';
+import waitForScrollEnd from '../utils/waitForScrollEnd';
+import debounce from '../utils/debounce';
+import { performScroll, setScroll } from '../utils/performScroll';
+import { assignSizes, assignSrcSet } from './utils/assignSrcSet';
 
 export interface SlideshowState {
   prevActiveSlideIdx: number;
@@ -22,7 +22,7 @@ export interface SlideshowState {
  */
 export const useSlideshow = (
   slideOptions: SlideOptions[],
-  passedOptions?: SlideshowOptions
+  passedOptions?: SlideshowOptions,
 ) => {
   const rootSlidesContainerRef = useRef<HTMLDivElement>(null);
   const slidesRef = useRef<HTMLImageElement[]>([]);
@@ -33,7 +33,7 @@ export const useSlideshow = (
       ...DEFAULT_SLIDESHOW_OPTIONS,
       ...passedOptions,
     }),
-    [passedOptions]
+    [passedOptions],
   );
   const slideshowState = useMemo<SlideshowState>(
     () => ({
@@ -44,13 +44,13 @@ export const useSlideshow = (
       isManualScrolling: false,
       isAutoScrolling: false,
     }),
-    []
+    [],
   );
   const [activeSlideIdx, setActiveSlideIdx] = useState(
-    options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex
+    options?.startingIndex ?? DEFAULT_SLIDESHOW_OPTIONS.startingIndex,
   );
   const [markedToLoadSlideMap, setMarkedToLoadSlideMap] = useState<boolean[]>(
-    []
+    [],
   );
   const [loadedSlideMap, setLoadedSlideMap] = useState<boolean[]>([]);
 
@@ -65,7 +65,7 @@ export const useSlideshow = (
           performScroll(
             rootSlidesContainerRef.current,
             foundParentSlideElement,
-            "center"
+            'center',
           );
         }
         await waitForScrollEnd(rootSlidesContainerRef.current);
@@ -79,7 +79,7 @@ export const useSlideshow = (
         }
       }
     },
-    [options.onSlideScrollEnd]
+    [options.onSlideScrollEnd],
   );
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export const useSlideshow = (
       setScroll(
         rootSlidesContainerRef.current,
         foundParentSlideElement,
-        "center"
+        'center',
       );
     }
   }, []);
@@ -100,7 +100,7 @@ export const useSlideshow = (
       else if (index < 0) nextIdx = slideOptions.length - 1;
       return nextIdx;
     },
-    [slideOptions.length]
+    [slideOptions.length],
   );
 
   const setSlideIdxInternal = useCallback(
@@ -115,12 +115,12 @@ export const useSlideshow = (
         return nextIdx;
       });
     },
-    [getNextIndex, performSlideshowScroll, options.onSlideScrollStart]
+    [getNextIndex, performSlideshowScroll, options.onSlideScrollStart],
   );
 
   const setSlideIdx = useCallback(
     debounce((idx: number) => setSlideIdxInternal(idx, true), 200),
-    [setSlideIdxInternal]
+    [setSlideIdxInternal],
   );
 
   const preloadedSlides = useMemo(() => {
@@ -129,7 +129,7 @@ export const useSlideshow = (
       options.preloadDepth,
       activeSlideIdx,
       getNextIndex,
-      setMarkedToLoadSlideMap
+      setMarkedToLoadSlideMap,
     );
   }, [slideOptions, options.preloadDepth, activeSlideIdx, getNextIndex]);
 
@@ -147,7 +147,7 @@ export const useSlideshow = (
       base.isSetToLoad = markedToLoadSlideMap[slideIndex] ?? false;
       base.loaded = loadedSlideMap[slideIndex] ?? false;
 
-      if ("image" in base) {
+      if ('image' in base) {
         const prevOnLoad = base.image.onLoad;
         base.image.onLoad = (e) => {
           if (prevOnLoad) prevOnLoad(e);
@@ -204,22 +204,22 @@ export const useSlideshow = (
     slidesRef,
     rootSlidesContainerRef,
     options,
-    slidesLoaded
+    slidesLoaded,
   );
 
   const activeSlide = useMemo(
     () => activeSlides[activeSlideIdx],
-    [activeSlides, activeSlideIdx]
+    [activeSlides, activeSlideIdx],
   );
 
   const goNextSlide = useCallback(
     () => setSlideIdx(activeSlideIdx + 1),
-    [activeSlides, activeSlideIdx]
+    [activeSlides, activeSlideIdx],
   );
 
   const goPreviousSlide = useCallback(
     () => setSlideIdx(activeSlideIdx - 1),
-    [activeSlides, activeSlideIdx]
+    [activeSlides, activeSlideIdx],
   );
 
   const setNextSlideIdxFocus = useCallback(
@@ -235,7 +235,7 @@ export const useSlideshow = (
         }
       }
     },
-    [setSlideIdx, activeSlideIdx]
+    [setSlideIdx, activeSlideIdx],
   );
 
   useEffect(() => {
