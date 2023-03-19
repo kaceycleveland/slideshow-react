@@ -21,8 +21,15 @@
   <h1>Slideshow React</h1>
 </a>
 <p>This library is still a heavy work in progress!</p>
-<p>Create a slideshow with lazy loaded image (and other elements) using the IntersectionObserver API with support for thumbnails and scrolling. Styling/style sheets are not bundled with this library but examples of styling implementations can be seen in our storybook.</p>
+<p>Create a slideshow with lazy loaded image (and other elements) using the IntersectionObserver API with support for thumbnails and scrolling. Styling/style sheets are not bundled with this library but examples of styling implementations are provided.</p>
 <p><a href="https://main--63dc6385f62009b5201ebeae.chromatic.com">Storybook Link</a></p>
+
+<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
+  <h3>Examples</h3>
+</a>
+<ul>
+<li><a href="https://codesandbox.io/embed/github/kaceycleveland/slideshow-react/tree/main/examples/mui">MUI/Emotion</a></li>
+</ul>
 
 <a href="#philosophy" id="philosophy" style="color: inherit; text-decoration: none;">
   <h2>Philosophy</h2>
@@ -37,12 +44,7 @@
 <a href="#images" id="images" style="color: inherit; text-decoration: none;">
   <h4>Images</h4>
 </a>
-<p>Images should typically be loaded into the DOM with a small file size footprint and then load the full quality one when needed. NextJS for example does this with their blur prop and providing two different srcs for an image and then loading the full quality image when it comes into the viewport. This library does the same using the intersection observer API. As a slideshow is scrolled, it will request and load the full quality one. In addition, a <code>preloadingDepth</code> can be provided to load the full quality images of neighboring slides as well at a given depth away from the current active slide.</p>
-
-<a href="#other-components" id="other-components" style="color: inherit; text-decoration: none;">
-  <h4>Other Components</h4>
-</a>
-<p>Providing callback functions for components such as <code>onSlideIn</code>, <code>onSlideOut</code>, and <code>onSlideInEnd</code> will eventually be supported.</p>
+<p>Images should typically be loaded into the DOM with a small file size footprint and then load the full quality one when needed. NextJS for example does this with their blur prop and providing two different srcs for an image and then loading the full quality image when it comes into the viewport. This library does the same using the intersection observer API. As a slideshow is scrolled, it will request and load the full quality one. In addition, a <code>preloadingDepth</code> can be provided to load the full quality images of neighboring slides as well at a given depth away from the current active slide to ensure slides are loaded before being viewed.</p>
 
 <a href="#offset-most-logic-to-browser-functionality" id="offset-most-logic-to-browser-functionality" style="color: inherit; text-decoration: none;">
   <h3>Offset most Logic to Browser Functionality</h3>
@@ -56,7 +58,7 @@
 <p>The general practice when implementing CSS around images in a slideshow is:</p>
 <ul>
 <li>The dimensions should not change (use <code>srcset</code> and <code>sizes</code> attributes on images to load responsive versions)</li>
-<li>The rendered image should match the dimensions of the loaded image</li>
+<li>The rendered image should match the dimensions as closely as possible to that of the loaded image</li>
 </ul>
 <p>Typical implementations will involve the usage of:</p>
 <ul>
