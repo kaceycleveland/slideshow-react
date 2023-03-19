@@ -1,6 +1,5 @@
 {
   "name": "mui",
-  "private": true,
   "version": "0.0.0",
   "main": "src/main.tsx",
   "scripts": {
