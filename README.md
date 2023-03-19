@@ -8,9 +8,12 @@
 
 This library is still a heavy work in progress!
 
-Create a slideshow with lazy loaded image (and other elements) using the IntersectionObserver API with support for thumbnails and scrolling. Styling/style sheets are not bundled with this library but examples of styling implementations can be seen in our storybook.
+Create a slideshow with lazy loaded image (and other elements) using the IntersectionObserver API with support for thumbnails and scrolling. Styling/style sheets are not bundled with this library but examples of styling implementations are provided.
 
 [Storybook Link](https://main--63dc6385f62009b5201ebeae.chromatic.com)
+
+### Examples
+- [MUI/Emotion](https://codesandbox.io/embed/github/kaceycleveland/slideshow-react/tree/main/examples/mui)
 
 ## Philosophy
 
@@ -21,12 +24,8 @@ There are a couple design decisions that impact the way the current iteration is
 
 #### Images
 
-Images should typically be loaded into the DOM with a small file size footprint and then load the full quality one when needed. NextJS for example does this with their blur prop and providing two different srcs for an image and then loading the full quality image when it comes into the viewport. This library does the same using the intersection observer API. As a slideshow is scrolled, it will request and load the full quality one. In addition, a `preloadingDepth` can be provided to load the full quality images of neighboring slides as well at a given depth away from the current active slide.
+Images should typically be loaded into the DOM with a small file size footprint and then load the full quality one when needed. NextJS for example does this with their blur prop and providing two different srcs for an image and then loading the full quality image when it comes into the viewport. This library does the same using the intersection observer API. As a slideshow is scrolled, it will request and load the full quality one. In addition, a `preloadingDepth` can be provided to load the full quality images of neighboring slides as well at a given depth away from the current active slide to ensure slides are loaded before being viewed.
 
-
-#### Other Components
-
-Providing callback functions for components such as `onSlideIn`, `onSlideOut`, and `onSlideInEnd` will eventually be supported.
 
 ### Offset most Logic to Browser Functionality
 **Slideshow functionality can be built with native browser supported CSS and JavaScript.**
@@ -36,7 +35,7 @@ Between built-in JavaScript functions and CSS properties, building out a slidesh
 #### Images
 The general practice when implementing CSS around images in a slideshow is:
 - The dimensions should not change (use `srcset` and `sizes` attributes on images to load responsive versions)
-- The rendered image should match the dimensions of the loaded image
+- The rendered image should match the dimensions as closely as possible to that of the loaded image
 
 Typical implementations will involve the usage of:
 - CSS `object-fit` property

@@ -147,11 +147,6 @@ export const useSlideshow = (
       base.isSetToLoad = markedToLoadSlideMap[slideIndex] ?? false;
       base.loaded = loadedSlideMap[slideIndex] ?? false;
 
-      if (base.isSetToLoad === undefined) {
-        base.isSetToLoad = true;
-      }
-      base.isSetToLoad;
-
       if ("image" in base) {
         const prevOnLoad = base.image.onLoad;
         base.image.onLoad = (e) => {
